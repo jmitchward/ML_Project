@@ -1,6 +1,6 @@
 # Jason Ward 2017-2019
 
-import basic_func
+import ML_base
 
 
 def class_count(branch):
@@ -197,11 +197,11 @@ def main(data, testData):
         prediction = predict(tree, row, testData)
         predictions.append(prediction)
     print('Determining accuracy.')
-    basic_func.accuracy(predictions, testData)
+    ML_base.accuracy(predictions, testData)
     return tree
 
 
-limited_dataset = basic_func.encoded_training_data[:200]
+limited_dataset = ML_base.encoded_training_data[:200]
 
 non_impact = [11, 13, 6, 10, 5, 25, 14, 26, 27, 29, 21, 33, 37, 28, 20, 32, 40, 24, 34, 35]
 hi_impact = [3, 39, 9, 30, 19, 23, 1, 2, 8, 0, 22, 18, 7, 16, 31, 38, 12, 15, 4, 17, 36]
@@ -210,4 +210,4 @@ hi_impact = [3, 39, 9, 30, 19, 23, 1, 2, 8, 0, 22, 18, 7, 16, 31, 38, 12, 15, 4,
 decision_tree_train = limited_dataset.drop(non_impact, axis=1, inplace=True)
 
 print('Beginning Decision Tree algorithm.')
-main(limited_dataset, basic_func.encoded_test_data)
+main(limited_dataset, ML_base.encoded_test_data)

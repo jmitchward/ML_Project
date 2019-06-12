@@ -13,7 +13,7 @@ from math import exp
 # NOTE: Should these be static? Does their function depend on the class instance?
 
 # Import the data from the UCI repository, assign it to separate variables
-class basic_func:
+class machine_learning():
     # Declaring here to pull out any specificity for future use
     # These declarations must ONLY be non dependent on class function call
 
@@ -23,47 +23,64 @@ class basic_func:
                    34, 35, 36, 37, 38, 40]
     questionFeatures = [25, 26, 27, 29]
 
-    train_data = pd.read_csv(
-        'http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz', header=None)
-    test_data = pd.read_csv(
-        'https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz',
-        header=None)
+    #train_data = pd.read_csv(
+    #    'http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz', header=None)
+    #test_data = pd.read_csv(
+    #    'https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz',
+    #    header=None)
 
-    def __init__(self):
-        # Request dataframes when class is initialized for future use
-
-        # Blanket formatting for all algorithms
-        print("Formatting the datasets.")
-        encoded_training_data = self.format_data(self.train_data)
-        encoded_test_data = self.format_data(self.test_data)
+#    def __init__(self):
+#        # Request dataframes when class is initialized for future use
+#        data_pick = input("Which dataset is being used?")
+#        if data_pick.lower() == "test":
+#            print("Formatting testing data.")
+#            self.data = self.test_data
+#            self.format_data()
+#        elif data_pick.lower() == "train":
+#            print("Formatting training data.")
+#            self.data = self.train_data
+#            self.format_data()
+#
+#        else:
+#            print("Quit fucking around.")
+#            self.data = self.train_data
+#            self.format_data()
 
     @staticmethod
-    def encode_values(dataset, column):
-        dataset[column] = dataset[column].astype('category')
-        dataset[column] = dataset[column].cat.codes
-        dataset[column] = dataset[column].astype('int')
+    def encode_values(data, column):
+        data[column] = data[column].astype('category')
+        data[column] = data[column].cat.codes
+        data[column] = data[column].astype('int')
 
-    def format_data(self, dataset):
+    @staticmethod
+    def data_data(data):
+        print("Information about the dataset is needed to continue. ")
+        # Try and glean the data you can, like how many attributes there are
+        # Also the data type that they are. Numerical or otherwise.
+        # Once that is found out it will be easy to find the rest
 
+
+    @staticmethod
+    def format_data(data):
+        # Abstract function definition being avoided for testing purposes
         print('Encoding categorical features.')
-        for each in self.catFeatures:
-            dataset.encode_values(dataset, each)
+        for each in machine_learning.catFeatures:
+            machine_learning.encode_values(each)
             # Encode class value.
             # Changes the actual value to a numerical value, allowing it to be used in the algorithm
 
-        dataset.encode_values(dataset, 41)
-        for value in self.questionFeatures:
-            dataset[value].replace(' ?', dataset.describe(include='all')[value][2], inplace=True)
+        machine_learning.encode_values(41)
+        for value in machine_learning.questionFeatures:
+            data[value].replace(' ?', data.describe(include='all')[value][2], inplace=True)
         # Take the categorical features, feed them to the encode function.
         print('Encoding numerical features.')
-        for each in self.numFeatures:
-            mean, std = dataset[each].mean(), dataset[each].std()
-            dataset.iloc[:, each] = (dataset[each] - mean) / std
+        for each in machine_learning.numFeatures:
+            mean, std = data[each].mean(), data[each].std()
+            data.iloc[:, each] = (data[each] - mean) / std
         # Standardize categorical features
         print('Standardizing categorical features.')
-        for each in self.catFeatures:
-            dataset.loc[:, each] = (dataset[each] - dataset[each].mean()) / dataset[each].std()
-        return dataset
+        for each in machine_learning.catFeatures:
+            data.loc[:, each] = (data[each] - data[each].mean()) / data[each].std()
 
     # Calculates probability
     @staticmethod
@@ -73,19 +90,19 @@ class basic_func:
 
     # Calculates the mean and standard deviation for each column
     @staticmethod
-    def basic_calc(dataset):
+    def basic_calc(data):
         summaries = list()
 
         # for each in hiImpact:
         for each in range(41):
-            mean = dataset[each].mean()
-            sdev = dataset[each].std()
+            mean = data[each].mean()
+            sdev = data[each].std()
             # creates a list containing the mean and s-dev for each feature in the set.
             summaries.append([mean, sdev])
         return summaries
 
     @staticmethod
-    def log_reg_accuracy(predict, data):
+    def log_reg_accuracy(data, predict):
         correct = 0
         print('')
         dSize = len(data)
@@ -97,7 +114,8 @@ class basic_func:
         print('Accuracy:', round(((correct / dSize) * 100.0)), '%')
 
     @staticmethod
-    def accuracy(predict, data):
+    def accuracy(data, predict):
+        # This function does not work without the test data formatted. FIX!
         print('Beginning accuracy rating.')
         correct = 0
         dSize = len(data)
@@ -105,3 +123,5 @@ class basic_func:
             if data.iloc[i][41] == predict[i]:
                 correct += 1
         print('Accuracy:', round(((correct / dSize) * 100.0)), '%')
+
+
