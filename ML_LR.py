@@ -1,6 +1,7 @@
 # Jason Ward 2017-2019
 
 from math import exp
+import pickle
 import ML_base
 
 
@@ -14,6 +15,7 @@ class logistic_regression(ML_base.machine_learning):
         print("Test data retrieved.")
         self.test_data = test_data
         # This would be an excellent point to make sure the data is encoded
+        self.main()
 
     def gradient_descent(self, learn, iterations):
         # Gradient descent is only used to establish weights, which are only established using
@@ -21,9 +23,9 @@ class logistic_regression(ML_base.machine_learning):
         for eachIter in range(iterations):
             sumError = 0
             for row in range(len(self.train_data)):
-                print("Updating Weights {:3.2%}".format(row / (len(self.train_Datadata))), end="\r")
+                print("Updating Weights {:3.2%}".format(row / (len(self.train_data))), end="\r")
                 row = self.train_data.iloc[row]
-                result = self.train_data.predict(row, self.weights)
+                result = self.predict(row)
                 error = (result - row[41])
                 sumError += .5 * (error ** 2)
                 self.weights[0] = self.weights[0] - learn * (1 / (len(self.train_data))) * error * result
@@ -46,7 +48,7 @@ class logistic_regression(ML_base.machine_learning):
         learningRate = 0.2
         iterations = 10
         # Returns the list of weights
-        self.weights = self.gradient_descent(self.train_data, learningRate, iterations)
+        self.weights = self.gradient_descent(learningRate, iterations)
         predictions = list()
         for row in range(len(self.test_data)):
             print("Predicting {:3.2%}".format(row / (len(self.test_data))), end="\r")
@@ -58,3 +60,6 @@ class logistic_regression(ML_base.machine_learning):
             else:
                 predictions.append(0)
         self.log_reg_accuracy(predictions, self.test_data)
+        self.save_instance()
+
+
