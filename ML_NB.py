@@ -42,6 +42,7 @@ class naive_bayes:
 
     def class_count(self):
         local_count = Counter(self.classifier)
+        # Counts the numbers of 0's and 1's in the classifier list and stores them
         self.classProb[0] = local_count[0]
         self.classProb[1] = local_count[1]
 
@@ -50,11 +51,15 @@ class naive_bayes:
         print("Calculating feature summaries.")
         self.summaries = ML_base.machine_learning.basic_calc(self.data)
         print("Beginning predictions.")
+        # All algorithms within the class run on self.data, reassigning avoids parameters
         self.data = self.test_data
+        # All algorithms within the class run on self.classifier
         self.classifier = self.test_class
         for i in range(len(self.data)):
             print("Predicting {:3.2%}".format(i / (len(self.data))), end="\r")
+            # Function call returns a 0 or a 1
             output = self.predict(self.data.iloc[i])
+            # Add it ot the list
             predictions.append(output)
         print('Determining accuracy.')
         ML_base.machine_learning.accuracy(self.classifier, predictions)

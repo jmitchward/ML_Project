@@ -3,6 +3,8 @@
 import ML_base
 
 
+# YOU ARE NEXT, YOU LANDLUBBER
+
 class decision_tree:
 
     def __init__(self, train_data, test_data):

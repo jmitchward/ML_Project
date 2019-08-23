@@ -85,6 +85,7 @@ class df_manage:
             self.predict_this.append(GTP)
 
     def save_instance(self):
+        # Stores the instance for a multiple classification structure
         with open('./ml_data/lr_output', 'wb') as log_output:
             pickle.dump(self, log_output)
 

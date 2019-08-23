@@ -18,20 +18,20 @@ print("Welcome. The default dataset is loaded. ")
 class menu(ML_DFM.df_manage):
 
     def __init__(self):
-        ML_DFM.df_manage.__init__(self)
-
-        # Lists
-        self.return_list = []
+        # Standard Lists
         self.train_class = []
         self.test_class = []
-        self.features = []
         self.classifiers = []
+        # Used in run_predictions
         self.predict_this = []
-        self.feature_names = []
-        self.predict_this = []
+        # Used in ML_DFM.feature_define() and ML_DFM.store_values()
         self.feature_values = {}
-
+        # Used in ML_DFM.feature.define() and ML_DFM.get_single()
+        self.feature_names = []
+        # Used in format_chain() and format_dataset()
         self.skip_check = "no"
+        # Used in format_chain()
+        self.features = []
 
         self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
         # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
@@ -40,6 +40,8 @@ class menu(ML_DFM.df_manage):
 
         # self.train_data = self.train_data[:1000]
         # self.test_data = self.test_data[:1000]
+
+        # Algorithms run on self.data. Begin using the training set.
         self.data = self.train_data
         self.menu()
 
@@ -63,11 +65,16 @@ class menu(ML_DFM.df_manage):
 
         if TTD == "separately":
             url = input("Enter the URL for the training data:")
+            # Import dataset. Input cleaning needed
             self.train_data = pd.read_csv(url)
             self.data = self.train_data
+            # Run algorithms needed to format
             self.format_chain()
+            # Skip the future test set, which will have the same features
             self.skip_check = "yes"
+            # Ensure train_data is properly updated before switching to test data next
             self.train_data = self.data
+            # Ensure training class values are updated before switching to test class
             self.train_class = self.classifiers
 
             url = input("Enter the URL for the test data:")

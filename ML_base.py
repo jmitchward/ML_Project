@@ -38,6 +38,8 @@ class machine_learning:
         print('Beginning accuracy rating.')
         correct = 0
         for i in range(len(classifier)):
+            # Iterate over the classifier list for the dataset
+            # If it matches the value in the predicted list, rate it
             print("Scoring {:3.2%}".format(i / (len(classifier))), end="\r")
             if classifier[i] == predict[i]:
                 correct += 1
