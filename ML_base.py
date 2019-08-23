@@ -34,19 +34,6 @@ class machine_learning:
         return summaries
 
     @staticmethod
-    def log_reg_accuracy(data, predict, classifier):
-        correct = 0
-        print('')
-        dSize = len(data)
-        for i in range(dSize):
-            print("Scoring {:3.2%}".format(i / (len(data))), end="\r")
-            if classifier[i] == predict[i]:
-                correct += 1
-        print('')
-        print('Accuracy:', round(((correct / dSize) * 100.0)), '%')
-        return round(((correct / dSize) * 100.0))
-
-    @staticmethod
     def accuracy(classifier, predict):
         print('Beginning accuracy rating.')
         correct = 0
@@ -55,3 +42,4 @@ class machine_learning:
             if classifier[i] == predict[i]:
                 correct += 1
         print('Accuracy:', round(((correct / len(classifier)) * 100.0)), '%')
+        return round(((correct / len(classifier)) * 100.0))

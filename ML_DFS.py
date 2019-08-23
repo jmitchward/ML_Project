@@ -10,6 +10,7 @@ def dataset_discovery(data):
     # Number of features in the dataset
 
     data_type = input("Will this be supervised?")
+    # Ideally a switch for unsupervised which does not feature a classifier
     if data_type.lower() == "yes":
         classifier = input("What column will the classifier be found?")
         classifier = int(classifier)

@@ -83,4 +83,4 @@ class logistic_regression:
             else:
                 predictions.append(0)
 
-        self.results = ML_base.machine_learning.log_reg_accuracy(self.data, predictions, self.test_class)
+        self.results = ML_base.machine_learning.accuracy(self.test_class, predictions)
