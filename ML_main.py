@@ -5,6 +5,7 @@
 # Calls ML_NB, ML_DT, ML_LR
 
 import pandas as pd
+import pickle
 import ML_LR
 import ML_NB
 import ML_DT
@@ -105,26 +106,27 @@ class menu(ML_DFM.df_manage):
             self.test_class = self.classifiers
 
         elif choice_format.lower() == "both":
-            print("Formatting both...")
-            print("Training Data:")
+            print("Formatting training data.")
             self.data = self.train_data
             self.format_chain()
             self.skip_check = "yes"
             self.train_data = self.data
             self.train_class = self.classifiers
 
-            print("Test Data:")
-            print("Formatting test data...")
+            print("Formatting test data.")
             self.data = self.test_data
             self.format_chain()
             self.test_data = self.data
             self.test_class = self.classifiers
 
+        self.save_instance()
         self.menu()
 
     # Run the naming of features function
     def run_ml_fn(self):
         self.feature_define()
+        self.save_instance()
+        self.menu()
 
     # Run the logistic regression function
     def run_ml_lr(self):
@@ -142,23 +144,47 @@ class menu(ML_DFM.df_manage):
     def run_ml_dt(self):
         print("Beginning Decision Tree.")
         self.d_tree = ML_DT.decision_tree.main(self.train_data, self.test_data, self.train_class, self.test_class)
+        self.save_instance()
         self.menu()
 
     # Run the naive bayes function
     def run_ml_nb(self):
         print("Beginning Naive Bayes.")
         self.n_bayes = ML_NB.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
+        self.save_instance()
         self.menu()
 
-    def run_predictions(self, algo_choice):
-        if not self.feature_names:
-            print("Please label columns to improve readability.")
-            self.run_ml_fn()
+    def run_predictions(self):
+        #        if not self.feature_names:
+        #            print("Please label columns to improve readability.")
+        #            self.run_ml_fn()
         choice_predict = input("Individual or group prediction?")
         if choice_predict == "individual":
-            self.predict_this = self.get_single()
+            self.data = self.get_single()
+            print("Individual entry loaded and formatted.")
             self.skip_check = "yes"
-            self.format_chain(self.predict_this)
+            local_choice = input("Please select an algorithm.")
+            if local_choice == "log reg":
+                if not self.log_reg:
+                    self.load_instance()
+                    self.d_tree.predict(self.data)
+                    # If that fails, kick back to main
+                else:
+                    self.log_reg.predictor(self.data)
+            if local_choice == "naive bayes":
+                if not self.n_bayes:
+                    self.load_instance()
+                    self.n_bayes.predict(self.data)
+                #           If that fails, kick back to main
+                else:
+                    self.n_bayes.predict(self.data)
+            if local_choice == "decision tree":
+                if not self.d_tree:
+                    self.load_instance()
+                    self.d_tree.predict(self.data)
+                    # If that fails, kick back to main
+                else:
+                    self.d_tree.predict(self.data)
 
             # Dont get overwhelmed. For log reg run the predictor by itself
             # For Naive Bayes run the predictor by itself
@@ -190,7 +216,8 @@ class menu(ML_DFM.df_manage):
         print("5. Run Naive Bayes")
         print("6. Run Decision Tree")
         print("7. Run Predictions ")
-        print("8. Exit")
+        print("8. Load Previous State")
+        print("9. Exit")
 
         next_choice = input("What would you like to do?")
 
@@ -209,13 +236,27 @@ class menu(ML_DFM.df_manage):
             self.run_ml_nb()
         elif choice.lower() == "run decision tree" or str(choice) == "6":
             self.run_ml_dt()
-        # elif choice.lower() == "run predictions" or str(choice) == "7":
-        #    self.run_predictions(choice)
-        elif choice.lower() == "exit" or str(choice) == "8":
+        elif choice.lower() == "run predictions" or str(choice) == "7":
+            self.run_predictions()
+        elif choice.lower() == "load state" or str(choice) == "8":
+            self.load_instance()
+        elif choice.lower() == "exit" or str(choice) == "9":
             exit()
         else:
             print("Invalid selection.")
             self.menu()
 
+    def save_instance(self):
+        # Stores the instance for a multiple classification structure
+        with open('./ml_data/ml_instance', 'wb') as save_output:
+            pickle.dump(self, save_output)
 
-menu()
+    def load_instance(self):
+        with open('./ml_data/ml_instance', 'rb') as load_file:
+            load_instance = pickle.load(load_file)
+            if __name__ == '__main__':
+                return load_instance.menu()
+
+
+if __name__ == '__main__':
+    menu()

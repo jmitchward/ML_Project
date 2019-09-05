@@ -4,7 +4,7 @@
 # Called by ML_DFM
 
 
-def dataset_discovery(data):
+def df_discovery(data):
     # List for each of the feature types
     categorical = []
     # Number of features in the dataset
@@ -57,7 +57,9 @@ def dataset_discovery(data):
 
     #    if doubleCheck.lower() == "yes":
     return categorical, numerical, classifier
+
 #    else:
 #       If the features have not been properly defined, extend the search parameters
 #        data_search = int(len(data) / 10)
 #        dataset_discovery(data)
+

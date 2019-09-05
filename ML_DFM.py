@@ -2,7 +2,6 @@
 # A class defining the functions used to manipulate the dataset.
 # Inherited by ML_main
 
-import pickle
 import ML_DFS
 
 
@@ -10,7 +9,7 @@ class df_manage:
 
     def find_features(self):
         # Limits access to the DFS file
-        self.features = ML_DFS.dataset_discovery(self.data)
+        self.features = ML_DFS.df_discovery(self.data)
         self.store_values()
 
     def encode_values(self, column):
@@ -77,19 +76,32 @@ class df_manage:
             self.feature_values.update({catFeatures: current_feature})
 
     def get_single(self):
-        for each in range(len(self.features_names)):
+        for each in range(len(self.feature_names)):
             # For each feature, which there are 41 in the default
             # Print the possible stored values for user input to be selected
             # from.
-            GTP = input("Enter the value for", each, ":")
+            GTP = input("Enter the value for", self.feature_names[each], ":")
             self.predict_this.append(GTP)
+            self.single_encode()
+            # So I have a list of, in this case, 41 values.
+            # Some of them will be matched to a stored list of values that have a
+            # corresponding categorical value that they need assigned
+            # To assign those values, I need to iterate over the list of each set
+            # of those values and find the one that matches, then replace that
+            # value with the stored categorical one.
+            # Probably need to a separate function to do this
 
-    def save_instance(self):
-        # Stores the instance for a multiple classification structure
-        with open('./ml_data/lr_output', 'wb') as log_output:
-            pickle.dump(self, log_output)
-
-    def load_instance(self):
-        with open('./ml_data/lr_output', 'rb') as load_file:
-            load_instance = pickle.load(load_file)
-            return load_instance
+    def single_encode(self):
+        # feature_values : Dictionary list of values group by features
+        # Established by the store_values() function
+        # single: An entry of data to be processed
+        # Cotains each possile value of the given feature indices
+        # I.E. {2: 'M, F, U'}
+        # faetures_names: List of the feature titles
+        for each_feature in self.feature_values:
+            for each_index in range(len(self.feature_values[each_feature])):
+                if self.predict_this[each_feature] == self.feature_values[each_feature][each_index].strip(' '):
+                    self.predict_this[each_feature] = each_index
+        self.data = self.predict_this
+        self.format_data()
+        self.standardize_data()
