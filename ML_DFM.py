@@ -80,7 +80,8 @@ class df_manage:
             # For each feature, which there are 41 in the default
             # Print the possible stored values for user input to be selected
             # from.
-            GTP = input("Enter the value for", self.feature_names[each], ":")
+            current_name = self.feature_names[each]
+            GTP = input("Enter the value for", current_name, ":")
             self.predict_this.append(GTP)
             self.single_encode()
             # So I have a list of, in this case, 41 values.
