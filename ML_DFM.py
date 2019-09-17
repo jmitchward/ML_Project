@@ -81,7 +81,8 @@ class df_manage:
             # Print the possible stored values for user input to be selected
             # from.
             current_name = self.feature_names[each]
-            GTP = input("Enter the value for", current_name, ":")
+            print("Current Feature:", current_name)
+            GTP = input("Enter this value:")
             self.predict_this.append(GTP)
             self.single_encode()
             # So I have a list of, in this case, 41 values.
@@ -100,7 +101,7 @@ class df_manage:
         # I.E. {2: 'M, F, U'}
         # faetures_names: List of the feature titles
         for each_feature in self.feature_values:
-            for each_index in range(len(self.feature_values[each_feature])):
+            for each_index in (self.feature_values[each_feature]):
                 if self.predict_this[each_feature] == self.feature_values[each_feature][each_index].strip(' '):
                     self.predict_this[each_feature] = each_index
         self.data = self.predict_this
