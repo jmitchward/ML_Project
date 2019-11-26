@@ -3,6 +3,7 @@
 # Inherited by ML_main
 
 import ML_DFS
+import textwrap
 
 
 class df_manage:
@@ -26,8 +27,8 @@ class df_manage:
 
         print("\nSearching for illegal characters.")
         for value in self.features[0]:
-            self.data[value].replace(' ?', self.data.describe(include='all')[value][2], inplace=True)
-
+            temp_data = self.data[:].astype('category')
+            self.data[value].replace(' ?', temp_data.describe(include='all')[value][2], inplace=True)
         print('Encoding categorical features.')
         for each in self.features[0]:
             self.encode_values(each)
@@ -81,29 +82,35 @@ class df_manage:
             # Print the possible stored values for user input to be selected
             # from.
             current_name = self.feature_names[each]
-            print("Current Feature:", current_name)
+            print("Options for:", current_name)
+            if each in self.feature_values:
+                for every in range(len(self.feature_values[each])):
+                    print(textwrap.fill(self.feature_values[each][every], 40))
             GTP = input("Enter this value:")
             self.predict_this.append(GTP)
-            self.single_encode()
-            # So I have a list of, in this case, 41 values.
-            # Some of them will be matched to a stored list of values that have a
-            # corresponding categorical value that they need assigned
-            # To assign those values, I need to iterate over the list of each set
-            # of those values and find the one that matches, then replace that
-            # value with the stored categorical one.
-            # Probably need to a separate function to do this
+            if each in self.feature_values:
+                self.single_encode(each)
+        self.data = self.predict_this
+        self.format_data()
+        self.standardize_data()
 
-    def single_encode(self):
+        # So I have a list of, in this case, 41 values.
+        # Some of them will be matched to a stored list of values that have a
+        # corresponding categorical value that they need assigned
+        # To assign those values, I need to iterate over the list of each set
+        # of those values  and find the one that matches, then replace that
+        # value with the stored categorical one.
+        # Probably need to a separate function to do this
+
+    def single_encode(self, each_feature):
         # feature_values : Dictionary list of values group by features
         # Established by the store_values() function
         # single: An entry of data to be processed
         # Cotains each possile value of the given feature indices
         # I.E. {2: 'M, F, U'}
         # faetures_names: List of the feature titles
-        for each_feature in self.feature_values:
-            for each_index in (self.feature_values[each_feature]):
-                if self.predict_this[each_feature] == self.feature_values[each_feature][each_index].strip(' '):
-                    self.predict_this[each_feature] = each_index
-        self.data = self.predict_this
-        self.format_data()
-        self.standardize_data()
+        for each_index in range(len(self.feature_values[each_feature])):
+            mutate_value = self.feature_values[each_feature][each_index].strip(' ')
+            mutate_value = self.feature_values[each_feature][each_index].lower()
+            if self.predict_this[each_feature] == mutate_value:
+                self.predict_this[each_feature] = each_index
