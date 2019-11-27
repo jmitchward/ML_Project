@@ -160,7 +160,12 @@ class menu(ML_DFM.df_manage):
         #            self.run_ml_fn()
         choice_predict = input("Individual or group prediction?")
         if choice_predict == "individual":
-            self.data = self.get_single()
+            # Retrieve a single prediction
+            self.get_single()
+            # Format it
+            self.format_data()
+            # Standardize it
+            self.standardize_data()
             print("Individual entry loaded and formatted.")
             self.skip_check = "yes"
             local_choice = input("Please select an algorithm.")

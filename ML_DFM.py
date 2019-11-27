@@ -82,7 +82,7 @@ class df_manage:
             # Print the possible stored values for user input to be selected
             # from.
             current_name = self.feature_names[each]
-            print("Options for:", current_name)
+            print("Options for ", current_name)
             if each in self.feature_values:
                 for every in range(len(self.feature_values[each])):
                     print(textwrap.fill(self.feature_values[each][every], 40))
@@ -91,8 +91,6 @@ class df_manage:
             if each in self.feature_values:
                 self.single_encode(each)
         self.data = self.predict_this
-        self.format_data()
-        self.standardize_data()
 
         # So I have a list of, in this case, 41 values.
         # Some of them will be matched to a stored list of values that have a
