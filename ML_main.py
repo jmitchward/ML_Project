@@ -124,6 +124,7 @@ class menu(ML_DFM.df_manage):
 
     # Run the naming of features function
     def run_ml_fn(self):
+
         self.feature_define()
         self.save_instance()
         self.menu()

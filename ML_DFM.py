@@ -51,6 +51,8 @@ class df_manage:
             self.data.loc[:, each] = (self.data[each] - self.data[each].mean()) / self.data[each].std()
 
     def feature_define(self):
+        # Replace feature names as this function is only called when names are being written.
+        self.feature_names.clear()
         for each in range(len(self.data.columns)):
             # feature_values only includes categorical features/columns
             for categories in self.feature_values:
@@ -59,13 +61,13 @@ class df_manage:
                     # If the current column is one of those values
                     print(self.feature_values[categories])
                     # Print those values for input clarity
-                    column_name = input("Enter the name for this feature.")
+                    column_name = input("Enter the name for this feature:")
                     self.feature_names.append(column_name)
                 else:
                     continue
             # Otherwise those columns are numerical
             print(self.data.iloc[:5][each])
-            column_name = input("Enter the name for this feature.")
+            column_name = input("Enter the name for this feature:")
             self.feature_names.append(column_name)
 
     def store_values(self):
@@ -82,14 +84,17 @@ class df_manage:
             # Print the possible stored values for user input to be selected
             # from.
             current_name = self.feature_names[each]
-            print("Options for ", current_name)
+            print("Options for", current_name)
             if each in self.feature_values:
                 for every in range(len(self.feature_values[each])):
-                    print(textwrap.fill(self.feature_values[each][every], 40))
-            GTP = input("Enter this value:")
-            self.predict_this.append(GTP)
-            if each in self.feature_values:
+                    print(every, textwrap.fill(self.feature_values[each][every], 40))
+                GTP = input("Select or enter a value:")
+                GTP = int(GTP)
+                self.predict_this.append(self.feature_values[each][GTP])
                 self.single_encode(each)
+            else:
+                GTP = input("Select or enter a value:")
+                self.predict_this.append(GTP)
         self.data = self.predict_this
 
         # So I have a list of, in this case, 41 values.
