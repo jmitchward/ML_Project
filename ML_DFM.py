@@ -26,9 +26,9 @@ class df_manage:
         # Numerical Features = self.features[1]
 
         print("\nSearching for illegal characters.")
-        for value in self.features[0]:
-            temp_data = self.data[:].astype('category')
-            self.data[value].replace(' ?', temp_data.describe(include='all')[value][2], inplace=True)
+        # for value in self.features[0]:
+        #   temp_data = self.data[:].astype('category')
+        #   self.data[value].replace(' ?', temp_data.describe(include='all')[value][2], inplace=True)
         print('Encoding categorical features.')
         for each in self.features[0]:
             self.encode_values(each)
@@ -89,12 +89,12 @@ class df_manage:
                 for every in range(len(self.feature_values[each])):
                     print(every, textwrap.fill(self.feature_values[each][every], 40))
                 GTP = input("Select or enter a value:")
-                GTP = int(GTP)
-                self.predict_this.append(self.feature_values[each][GTP])
-                self.single_encode(each)
+                # self.predict_this.append(self.feature_values[each][GTP])
+                # self.single_encode(each)
             else:
                 GTP = input("Select or enter a value:")
-                self.predict_this.append(GTP)
+            GTP = int(GTP)
+            self.predict_this.append(GTP)
         self.data = self.predict_this
 
     def single_encode(self, each_feature):
