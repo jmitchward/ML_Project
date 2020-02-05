@@ -97,14 +97,6 @@ class df_manage:
                 self.predict_this.append(GTP)
         self.data = self.predict_this
 
-        # So I have a list of, in this case, 41 values.
-        # Some of them will be matched to a stored list of values that have a
-        # corresponding categorical value that they need assigned
-        # To assign those values, I need to iterate over the list of each set
-        # of those values  and find the one that matches, then replace that
-        # value with the stored categorical one.
-        # Probably need to a separate function to do this
-
     def single_encode(self, each_feature):
         # feature_values : Dictionary list of values group by features
         # Established by the store_values() function

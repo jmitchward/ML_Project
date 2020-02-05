@@ -163,8 +163,6 @@ class menu(ML_DFM.df_manage):
         if choice_predict == "individual":
             # Retrieve a single prediction
             self.get_single()
-            # Format it
-            self.format_data()
             # Standardize it
             self.standardize_data()
             print("Individual entry loaded and formatted.")
