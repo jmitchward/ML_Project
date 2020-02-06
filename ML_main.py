@@ -164,8 +164,6 @@ class menu(ML_DFM.df_manage):
             # Retrieve a single prediction
             self.get_single()
             self. data = pd.DataFrame(self.data)
-            # Standardize it
-            self.standardize_data()
             print("Individual entry loaded and formatted.")
             self.skip_check = "yes"
             local_choice = input("Please select an algorithm.")
@@ -177,12 +175,12 @@ class menu(ML_DFM.df_manage):
                 else:
                     self.log_reg.predictor(self.data)
             if local_choice == "naive bayes":
-                if not self.n_bayes:
-                    self.load_instance()
-                    self.n_bayes.predict(self.data)
+                # if not self.n_bayes:
+                # self.load_instance()
+                self.load_instance().predict(self.data)
                 #           If that fails, kick back to main
-                else:
-                    self.n_bayes.predict(self.data)
+                # else:
+                #    self.load_instance().predict(self.data)
             if local_choice == "decision tree":
                 if not self.d_tree:
                     self.load_instance()
