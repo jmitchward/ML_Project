@@ -2,7 +2,7 @@
 
 from math import exp
 import pickle
-import ML_base
+import basic_math
 
 
 # Its iloc[row][column]
@@ -83,4 +83,4 @@ class logistic_regression:
             else:
                 predictions.append(0)
 
-        self.results = ML_base.machine_learning.accuracy(self.test_class, predictions)
+        self.results = basic_math.machine_learning.accuracy(self.test_class, predictions)

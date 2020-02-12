@@ -1,6 +1,6 @@
 # Jason Ward 2017-2019
 
-import ML_base
+import basic_math
 
 
 # YOU ARE NEXT, YOU LANDLUBBER

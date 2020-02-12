@@ -6,17 +6,17 @@
 
 import pandas as pd
 import pickle
-import ML_LR
-import ML_NB
-import ML_DT
-import ML_DFM
+import logistic_regression
+import naive_bayes
+import decision_tree
+import main_controller
 
 print("Welcome. The default dataset is loaded. ")
 
 
 # It makes more sense for the menu to inherit the machine learning class than anything else
 
-class menu(ML_DFM.df_manage):
+class menu(main_controller.df_manage):
 
     def __init__(self):
         # Standard Lists
@@ -137,21 +137,23 @@ class menu(ML_DFM.df_manage):
         self.standardize_data()
 
         print("Beginning Logistic Regression.")
-        self.log_reg = ML_LR.logistic_regression(self.train_data, self.test_data, self.train_class, self.test_class)
+        self.log_reg = logistic_regression.logistic_regression(self.train_data, self.test_data, self.train_class,
+                                                               self.test_class)
         self.save_instance()
         self.menu()
 
     # Run the decision tree function
     def run_ml_dt(self):
         print("Beginning Decision Tree.")
-        self.d_tree = ML_DT.decision_tree.main(self.train_data, self.test_data, self.train_class, self.test_class)
+        self.d_tree = decision_tree.decision_tree.main(self.train_data, self.test_data, self.train_class,
+                                                       self.test_class)
         self.save_instance()
         self.menu()
 
     # Run the naive bayes function
     def run_ml_nb(self):
         print("Beginning Naive Bayes.")
-        self.n_bayes = ML_NB.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
+        self.n_bayes = naive_bayes.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
         self.save_instance()
         self.menu()
 
@@ -166,7 +168,7 @@ class menu(ML_DFM.df_manage):
             self. data = pd.DataFrame(self.data)
             print("Individual entry loaded and formatted.")
             self.skip_check = "yes"
-            local_choice = input("Please select an algorithm.")
+            local_choice = input("Please select an algorithm:")
             if local_choice == "log reg":
                 if not self.log_reg:
                     self.load_instance()
@@ -177,17 +179,18 @@ class menu(ML_DFM.df_manage):
             if local_choice == "naive bayes":
                 # if not self.n_bayes:
                 # self.load_instance()
-                self.load_instance().predict(self.data)
+                self.nb_predict(self.data)
+                print(self.predictions)
                 #           If that fails, kick back to main
                 # else:
                 #    self.load_instance().predict(self.data)
             if local_choice == "decision tree":
                 if not self.d_tree:
                     self.load_instance()
-                    self.d_tree.predict(self.data)
+                    self.saved_instance.predict(self.data)
                     # If that fails, kick back to main
                 else:
-                    self.d_tree.predict(self.data)
+                    self.saved_instance.predict(self.data)
 
             # Dont get overwhelmed. For log reg run the predictor by itself
             # For Naive Bayes run the predictor by itself
@@ -256,9 +259,9 @@ class menu(ML_DFM.df_manage):
 
     def load_instance(self):
         with open('./ml_data/ml_instance', 'rb') as load_file:
-            load_instance = pickle.load(load_file)
+            saved_instance = pickle.load(load_file)
             if __name__ == '__main__':
-                return load_instance.menu()
+                return saved_instance.menu()
 
 
 if __name__ == '__main__':
