@@ -3,6 +3,7 @@
 # Called by ML_main
 
 import basic_math
+import pickle
 from collections import Counter
 
 
@@ -11,6 +12,7 @@ class naive_bayes:
     def __init__(self, train_data, test_data, train_class, test_class):
         print("Training data retrieved.")
         self.data = train_data
+        self.results = 0.0
         self.classifier = train_class
         print("Testing data retrieved.")
         self.test_data = test_data
@@ -21,6 +23,10 @@ class naive_bayes:
         self.summaries = []
         self.predictions = list()
         self.main()
+
+    def save_instance(self):
+        with open('./ml_data/nb_instance', 'wb') as save_file:
+            pickle.dump(self, save_file)
 
     # Determines which class a given sample belongs to
     def nb_predict(self):
@@ -61,4 +67,6 @@ class naive_bayes:
         self.classifier = self.test_class
         self.predict()
         print('Determining accuracy.')
-        basic_math.machine_learning.accuracy(self.classifier, self.predictions)
+        self.results = basic_math.machine_learning.accuracy(self.classifier, self.predictions)
+
+        self.save_instance()

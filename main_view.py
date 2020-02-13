@@ -137,24 +137,19 @@ class menu(main_controller.df_manage):
         self.standardize_data()
 
         print("Beginning Logistic Regression.")
-        self.log_reg = logistic_regression.logistic_regression(self.train_data, self.test_data, self.train_class,
-                                                               self.test_class)
-        self.save_instance()
+        logistic_regression.logistic_regression(self.train_data, self.test_data, self.train_class, self.test_class)
         self.menu()
 
     # Run the decision tree function
     def run_ml_dt(self):
         print("Beginning Decision Tree.")
-        self.d_tree = decision_tree.decision_tree.main(self.train_data, self.test_data, self.train_class,
-                                                       self.test_class)
-        self.save_instance()
+        decision_tree.decision_tree.main(self.train_data, self.test_data, self.train_class, self.test_class)
         self.menu()
 
     # Run the naive bayes function
     def run_ml_nb(self):
         print("Beginning Naive Bayes.")
-        self.n_bayes = naive_bayes.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
-        self.save_instance()
+        naive_bayes.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
         self.menu()
 
     def run_predictions(self):
@@ -177,10 +172,10 @@ class menu(main_controller.df_manage):
                 else:
                     self.log_reg.predictor(self.data)
             if local_choice == "naive bayes":
-                # if not self.n_bayes:
-                # self.load_instance()
-                self.nb_predict(self.data)
-                print(self.predictions)
+                with open('./ml_data/nb_instance', 'rb') as nb_instance:
+                    saved_dataset = pickle.load(nb_instance)
+                nb_instance.nb_predict(self.data)
+                print(nb_instance.predictions)
                 #           If that fails, kick back to main
                 # else:
                 #    self.load_instance().predict(self.data)
@@ -254,14 +249,14 @@ class menu(main_controller.df_manage):
 
     def save_instance(self):
         # Stores the instance for a multiple classification structure
-        with open('./ml_data/ml_instance', 'wb') as save_output:
-            pickle.dump(self, save_output)
+        with open('./ml_data/dataset_instance', 'wb') as save_file:
+            pickle.dump(self, save_file)
 
     def load_instance(self):
-        with open('./ml_data/ml_instance', 'rb') as load_file:
-            saved_instance = pickle.load(load_file)
+        with open('./ml_data/dataset_instance', 'rb') as load_file:
+            saved_dataset = pickle.load(load_file)
             if __name__ == '__main__':
-                return saved_instance.menu()
+                return saved_dataset.menu()
 
 
 if __name__ == '__main__':

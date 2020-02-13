@@ -16,6 +16,7 @@ class logistic_regression:
         # self.weight_key = 0.0
         # Initial weight per formula standard, then weights for each feature of the set
         self.weights = [0.0] * 41
+        self.results = 0.0
         # Dataset to train the algorithm
         print("Test data retrieved.")
         # Dataset to score the weights
@@ -29,6 +30,10 @@ class logistic_regression:
         self.classifier = train_class
         # This would be an excellent point to make sure the data is encoded
         self.main()
+
+    def save_instance(self):
+        with open('./ml_data/lr_instance', 'wb') as save_file:
+            pickle.dump(self, save_file)
 
     def weight_calculator(self, learn, iterations):
         # Gradient descent is only used to establish weights, which are only established using
@@ -84,3 +89,5 @@ class logistic_regression:
                 predictions.append(0)
 
         self.results = basic_math.machine_learning.accuracy(self.test_class, predictions)
+
+        self.save_instance()
