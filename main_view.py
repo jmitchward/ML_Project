@@ -253,7 +253,7 @@ class menu(main_controller.df_manage):
             pickle.dump(self, save_file)
 
     def load_instance(self):
-        with open('./ml_data/dataset_instance', 'rb') as load_file:
+        with open('./ml_data/ml_instance', 'rb') as load_file:
             saved_dataset = pickle.load(load_file)
             if __name__ == '__main__':
                 return saved_dataset.menu()

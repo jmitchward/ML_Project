@@ -4,6 +4,7 @@
 
 import basic_math
 import pickle
+import pandas as pd
 from collections import Counter
 
 
@@ -29,7 +30,11 @@ class naive_bayes:
             pickle.dump(self, save_file)
 
     # Determines which class a given sample belongs to
-    def nb_predict(self):
+    def nb_predict(self, data=pd.DataFrame({'A': []})):
+        # For predicting outside of instance training. If the default value, which is empty, is false then there was
+        # a dataframe passed for predicting.
+        if not data.empty:
+            self.data = data
         for i in range(len(self.data)):
             print("Predicting {:3.2%}".format(i / (len(self.data))), end="\r")
             # Returns the probability of each classification
@@ -47,9 +52,9 @@ class naive_bayes:
                                                                              self.summaries[eachValue][0],
                                                                              self.summaries[eachValue][1])
             if self.classProb[0] > self.classProb[1]:
-                self.predictions.append('0')
+                self.predictions.append(int(0))
             else:
-                self.predictions.append('1')
+                self.predictions.append(int(1))
 
     def class_count(self):
         local_count = Counter(self.classifier)
@@ -65,7 +70,7 @@ class naive_bayes:
         self.data = self.test_data
         # All algorithms within the class run on self.classifier
         self.classifier = self.test_class
-        self.predict()
+        self.nb_predict()
         print('Determining accuracy.')
         self.results = basic_math.machine_learning.accuracy(self.classifier, self.predictions)
 
