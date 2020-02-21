@@ -174,7 +174,7 @@ class menu(main_controller.df_manage):
             if local_choice == "naive bayes":
                 with open('./ml_data/nb_instance', 'rb') as nb_instance:
                     saved_dataset = pickle.load(nb_instance)
-                nb_instance.nb_predict(self.data)
+                saved_dataset.nb_predict(self.data)
                 print(nb_instance.predictions)
                 #           If that fails, kick back to main
                 # else:
