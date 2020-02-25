@@ -2,7 +2,7 @@
 # A class defining the functions used to manipulate the dataset.
 # Inherited by ML_main
 
-import main_model
+import database_setup
 import textwrap
 
 
@@ -10,7 +10,7 @@ class df_manage:
 
     def find_features(self):
         # Limits access to the DFS file
-        self.features = main_model.df_discovery(self.data)
+        self.features = database_setup.df_discovery(self.data)
         self.store_values()
 
     def encode_values(self, column):

@@ -33,6 +33,7 @@ class naive_bayes:
     def nb_predict(self, data=pd.DataFrame({'A': []})):
         # For predicting outside of instance training. If the default value, which is empty, is false then there was
         # a dataframe passed for predicting.
+        self.predictions.clear()
         if not data.empty:
             self.data = data
         for i in range(len(self.data)):
@@ -51,10 +52,10 @@ class naive_bayes:
                 self.classProb[1] *= basic_math.machine_learning.probability(row[eachValue],
                                                                              self.summaries[eachValue][0],
                                                                              self.summaries[eachValue][1])
-            if self.classProb[0] > self.classProb[1]:
-                self.predictions.append(int(0))
-            else:
-                self.predictions.append(int(1))
+        if self.classProb[0] > self.classProb[1]:
+            self.predictions.append(int(0))
+        else:
+            self.predictions.append(int(1))
 
     def class_count(self):
         local_count = Counter(self.classifier)

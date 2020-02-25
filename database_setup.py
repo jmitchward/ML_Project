@@ -1,7 +1,5 @@
-# Machine Learning-  Dataframe Sort
-# Receives the dataset and then parses it splitting the categorical and numerical
-# features into two separate lists.
-# Called by ML_DFM
+# Machine Learning-  Dataframe Sort Receives the dataset and then parses it splitting the categorical and numerical
+# features into two separate lists. Called by ML_DFM.
 
 
 def df_discovery(data):

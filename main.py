@@ -9,14 +9,14 @@ import pickle
 import logistic_regression
 import naive_bayes
 import decision_tree
-import main_controller
+import database_manager
 
 print("Welcome. The default dataset is loaded. ")
 
 
 # It makes more sense for the menu to inherit the machine learning class than anything else
 
-class menu(main_controller.df_manage):
+class menu(database_manager.df_manage):
 
     def __init__(self):
         # Standard Lists
@@ -38,9 +38,6 @@ class menu(main_controller.df_manage):
         # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
         self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
         # https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz
-
-        # self.train_data = self.train_data[:1000]
-        # self.test_data = self.test_data[:1000]
 
         # Algorithms run on self.data. Begin using the training set.
         self.data = self.train_data
@@ -175,7 +172,7 @@ class menu(main_controller.df_manage):
                 with open('./ml_data/nb_instance', 'rb') as nb_instance:
                     saved_dataset = pickle.load(nb_instance)
                 saved_dataset.nb_predict(self.data)
-                print(nb_instance.predictions)
+                print(saved_dataset.predictions)
                 #           If that fails, kick back to main
                 # else:
                 #    self.load_instance().predict(self.data)
