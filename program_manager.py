@@ -10,11 +10,10 @@ import logistic_regression
 import naive_bayes
 import decision_tree
 import database_manager
+import prediction_manager
 
 print("Welcome. The default dataset is loaded. ")
 
-
-# It makes more sense for the menu to inherit the machine learning class than anything else
 
 class menu(database_manager.df_manage):
 
@@ -44,13 +43,10 @@ class menu(database_manager.df_manage):
         self.menu()
 
     def format_chain(self):
-        # Need to skip the test dataset discovery as it will need to be the same as the training dataset
-        # Why not access the entire dataframe feature by feature then run through that. May be faster
-        # Sort the dataset features into categorical and numerical
         if self.skip_check == "no":
-            self.find_features()
+            self.call_setup()
         # Encode binary classifier into 0 or 1
-        self.encode_values(self.features[2])
+        self.encode_data(self.features[2])
         # Separate classifier from dataset
         self.classifiers = self.data.iloc[:][self.features[2]]
         # Drop classifier from dataset
@@ -119,14 +115,12 @@ class menu(database_manager.df_manage):
         self.save_instance()
         self.menu()
 
-    # Run the naming of features function
     def run_ml_fn(self):
 
-        self.feature_define()
+        self.feature_naming()
         self.save_instance()
         self.menu()
 
-    # Run the logistic regression function
     def run_ml_lr(self):
         self.data = self.train_data
         self.standardize_data()
@@ -137,74 +131,19 @@ class menu(database_manager.df_manage):
         logistic_regression.logistic_regression(self.train_data, self.test_data, self.train_class, self.test_class)
         self.menu()
 
-    # Run the decision tree function
     def run_ml_dt(self):
         print("Beginning Decision Tree.")
         decision_tree.decision_tree.main(self.train_data, self.test_data, self.train_class, self.test_class)
         self.menu()
 
-    # Run the naive bayes function
     def run_ml_nb(self):
         print("Beginning Naive Bayes.")
         naive_bayes.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
         self.menu()
 
     def run_predictions(self):
-        #        if not self.feature_names:
-        #            print("Please label columns to improve readability.")
-        #            self.run_ml_fn()
-        choice_predict = input("Individual or group prediction?")
-        if choice_predict == "individual":
-            # Retrieve a single prediction
-            self.get_single()
-            self. data = pd.DataFrame(self.data)
-            print("Individual entry loaded and formatted.")
-            self.skip_check = "yes"
-            local_choice = input("Please select an algorithm:")
-            if local_choice == "log reg":
-                if not self.log_reg:
-                    self.load_instance()
-                    self.d_tree.predict(self.data)
-                    # If that fails, kick back to main
-                else:
-                    self.log_reg.predictor(self.data)
-            if local_choice == "naive bayes":
-                with open('./ml_data/nb_instance', 'rb') as nb_instance:
-                    saved_dataset = pickle.load(nb_instance)
-                saved_dataset.nb_predict(self.data)
-                print(saved_dataset.predictions)
-                #           If that fails, kick back to main
-                # else:
-                #    self.load_instance().predict(self.data)
-            if local_choice == "decision tree":
-                if not self.d_tree:
-                    self.load_instance()
-                    self.saved_instance.predict(self.data)
-                    # If that fails, kick back to main
-                else:
-                    self.saved_instance.predict(self.data)
 
-            # Dont get overwhelmed. For log reg run the predictor by itself
-            # For Naive Bayes run the predictor by itself
-            # Need to make sure formatting is correct. Maybe a dictionary of changed values.
-            # Need to make sure its categorically formatted the same way as the rest
-        elif choice_predict == "dataset":
-            self.import_dataset()
-
-    # Iterate over the dataset features asking for the values
-    # of this singular entry
-    # THEN
-    #            log_reg.predict()
-    # This is calling something that was not defined with this is chosen first
-    # While respecting the parameter of the function call
-    #        elif choice_predict == "group":
-    # Request either a pre defined new list of entries or manual input
-
-    # In order to predict for any new input, there needs to be established
-    # a dictionary correlating the encoded values to the actual categorical
-    # feature.
-
-    # That is best done while encoding is happening
+        prediction_manager.predict_manage()
 
     def menu(self):
         print("1. Import Data")
@@ -249,8 +188,8 @@ class menu(database_manager.df_manage):
         with open('./ml_data/dataset_instance', 'wb') as save_file:
             pickle.dump(self, save_file)
 
-    def load_instance(self):
-        with open('./ml_data/ml_instance', 'rb') as load_file:
+    def load_instance(self, file_path):
+        with open(file_path, 'rb') as load_file:
             saved_dataset = pickle.load(load_file)
             if __name__ == '__main__':
                 return saved_dataset.menu()

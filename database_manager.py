@@ -3,17 +3,15 @@
 # Inherited by ML_main
 
 import database_setup
-import textwrap
 
 
 class df_manage:
 
-    def find_features(self):
-        # Limits access to the DFS file
+    def call_setup(self):
         self.features = database_setup.df_discovery(self.data)
-        self.store_values()
+        self.backup_database()
 
-    def encode_values(self, column):
+    def encode_data(self, column):
         # Cast the data frame as category
         self.data[column] = self.data[column].astype('category')
         # Change every value in its respective categorical value
@@ -31,7 +29,7 @@ class df_manage:
         #   self.data[value].replace(' ?', temp_data.describe(include='all')[value][2], inplace=True)
         print('Encoding categorical features.')
         for each in self.features[0]:
-            self.encode_values(each)
+            self.encode_data(each)
         return self.data
 
     def standardize_data(self):
@@ -50,7 +48,7 @@ class df_manage:
             # Use these values to standardize categorical features
             self.data.loc[:, each] = (self.data[each] - self.data[each].mean()) / self.data[each].std()
 
-    def feature_define(self):
+    def feature_naming(self):
         # Replace feature names as this function is only called when names are being written.
         self.feature_names.clear()
         for each in range(len(self.data.columns)):
@@ -70,42 +68,10 @@ class df_manage:
             column_name = input("Enter the name for this feature:")
             self.feature_names.append(column_name)
 
-    def store_values(self):
+    def backup_database(self):
         temp_data = self.data[:].astype('category')
         # Store column values in a list of lists
         for catFeatures in self.features[0]:
             current_feature = list(temp_data[catFeatures].cat.categories)
             # Create dictionary of categorical features and their list of values
             self.feature_values.update({catFeatures: current_feature})
-
-    def get_single(self):
-        for each in range(len(self.feature_names)):
-            # For each feature, which there are 41 in the default
-            # Print the possible stored values for user input to be selected
-            # from.
-            current_name = self.feature_names[each]
-            print("Options for", current_name)
-            if each in self.feature_values:
-                for every in range(len(self.feature_values[each])):
-                    print(every, textwrap.fill(self.feature_values[each][every], 40))
-                GTP = input("Select or enter a value:")
-                # self.predict_this.append(self.feature_values[each][GTP])
-                # self.single_encode(each)
-            else:
-                GTP = input("Select or enter a value:")
-            GTP = int(GTP)
-            self.predict_this.append(GTP)
-        self.data = self.predict_this
-
-    def single_encode(self, each_feature):
-        # feature_values : Dictionary list of values group by features
-        # Established by the store_values() function
-        # single: An entry of data to be processed
-        # Cotains each possile value of the given feature indices
-        # I.E. {2: 'M, F, U'}
-        # faetures_names: List of the feature titles
-        for each_index in range(len(self.feature_values[each_feature])):
-            mutate_value = self.feature_values[each_feature][each_index].strip(' ')
-            mutate_value = self.feature_values[each_feature][each_index].lower()
-            if self.predict_this[each_feature] == mutate_value:
-                self.predict_this[each_feature] = each_index
