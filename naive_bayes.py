@@ -41,21 +41,24 @@ class naive_bayes:
             # Returns the probability of each classification
             self.class_count()
             row = self.data.iloc[i]
-            # Probability of a sample belonging to 50000+
-            # classProb[0]
-            # Probability of a sample belonging to -50000
-            # classProb[1]
-            for eachValue in range(len(self.data.columns)):
-                self.classProb[0] *= basic_math.machine_learning.probability(row[eachValue],
-                                                                             self.summaries[eachValue][0],
-                                                                             self.summaries[eachValue][1])
-                self.classProb[1] *= basic_math.machine_learning.probability(row[eachValue],
-                                                                             self.summaries[eachValue][0],
-                                                                             self.summaries[eachValue][1])
+            self.core_predict(row)
         if self.classProb[0] > self.classProb[1]:
             self.predictions.append(int(0))
         else:
             self.predictions.append(int(1))
+
+    def core_predict(self, row):
+        # Probability of a sample belonging to 50000+
+        # classProb[0]
+        # Probability of a sample belonging to -50000
+        # classProb[1]
+        for eachValue in range(len(self.data.columns)):
+            self.classProb[0] *= basic_math.machine_learning.probability(row[eachValue],
+                                                                         self.summaries[eachValue][0],
+                                                                         self.summaries[eachValue][1])
+            self.classProb[1] *= basic_math.machine_learning.probability(row[eachValue],
+                                                                         self.summaries[eachValue][0],
+                                                                         self.summaries[eachValue][1])
 
     def class_count(self):
         local_count = Counter(self.classifier)

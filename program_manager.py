@@ -18,28 +18,24 @@ print("Welcome. The default dataset is loaded. ")
 class menu(database_manager.df_manage):
 
     def __init__(self):
-        # Standard Lists
+        # Lists
         self.train_class = []
         self.test_class = []
         self.classifiers = []
-        # Used in run_predictions
-        self.predict_this = []
-        # Used in ML_DFM.feature_define() and ML_DFM.store_values()
-        self.feature_values = {}
-        # Used in ML_DFM.feature.define() and ML_DFM.get_single()
-        self.feature_names = []
-        # Used in format_chain() and format_dataset()
-        self.skip_check = "no"
-        # Used in format_chain()
-        self.features = []
 
+        self.feature_names = []
+        self.features = []
+        # Dictionaries
+        self.feature_values = {}
+        # Misc Values
+        self.skip_check = "no"
+        self.ml_instance = './ml_data/ml_instance'
         self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
         # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
         self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
         # https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz
-
-        # Algorithms run on self.data. Begin using the training set.
         self.data = self.train_data
+        # START
         self.menu()
 
     def format_chain(self):
@@ -142,8 +138,10 @@ class menu(database_manager.df_manage):
         self.menu()
 
     def run_predictions(self):
-
-        prediction_manager.predict_manage()
+        predict_type = input("Individual or group prediction?")
+        print("1. Logistic Regression \n 2. Naive Bayes \n 3. Decision Tree \n")
+        algo = input("Please select an algorithm:")
+        prediction_manager.predict_manage(predict_type, algo, self.feature_names, self.feature_values)
 
     def menu(self):
         print("1. Import Data")
@@ -176,7 +174,8 @@ class menu(database_manager.df_manage):
         elif choice.lower() == "run predictions" or str(choice) == "7":
             self.run_predictions()
         elif choice.lower() == "load state" or str(choice) == "8":
-            self.load_instance()
+            self.load_state = self.load_instance(self.ml_instance)
+            self.load_state.menu()
         elif choice.lower() == "exit" or str(choice) == "9":
             exit()
         else:
@@ -191,8 +190,7 @@ class menu(database_manager.df_manage):
     def load_instance(self, file_path):
         with open(file_path, 'rb') as load_file:
             saved_dataset = pickle.load(load_file)
-            if __name__ == '__main__':
-                return saved_dataset.menu()
+            return saved_dataset
 
 
 if __name__ == '__main__':

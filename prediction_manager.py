@@ -5,42 +5,42 @@ import textwrap
 
 class predict_manage(program_manager.menu):
 
-    def __init__(self):
+    def __init__(self, prediction, algorithm, feature_names, feature_values):
 
-        nb_path = './ml_data/nb_instance'
-        lr_path = './ml_data/lr_instance'
-        dt_path = './ml_data/dt_instance'
+        self.predict_this = []
 
-        choice_predict = input("Individual or group prediction?")
-        if choice_predict == "individual":
+        self.prediction_method = prediction
+        self.prediction_algo = algorithm
+        self.feature_names = feature_names
+        self.feature_values = feature_values
+
+        self.nb_path = './ml_data/nb_instance'
+        self.lr_path = './ml_data/lr_instance'
+        self.dt_path = './ml_data/dt_instance'
+
+        self.main()
+
+    def main(self):
+        if self.prediction_method == "individual":
             # Retrieve a single prediction
             self.single_predictee()
             self.data = pd.DataFrame(self.data)
         # if not self.feature_names:
         # print("Please label columns to improve readability.")
         # self.run_ml_fn()
-        print("\nIndividual entry loaded and formatted.\n")
-        print("1. Logistic Regression \n 2. Naive Bayes \n 3. Decision Tree \n")
-        local_choice = input("Please select an algorithm:")
-        if local_choice == "log reg" or int(1):
-            if not self.log_reg:
-                saved_dataset = self.load_instance(self, lr_path)
-                saved_dataset.lr_predictor(self.data)
-                # If that fails, kick back to main
-            else:
-                self.log_reg.predictor(self.data)
-        if local_choice == "naive bayes" or int(2):
-            saved_dataset = self.load_instance(self, nb_path)
+
+        if self.prediction_algo.lower == "log reg" or str(self.prediction_algo) == "1":
+            saved_dataset = self.load_instance(self.lr_path)
+            saved_dataset.lr_predictor(self.data)
+        elif self.prediction_algo.lower == "naive bayes" or str(self.prediction_algo) == "2":
+            saved_dataset = self.load_instance(self.nb_path)
             saved_dataset.nb_predict(self.data)
             print(saved_dataset.predictions)
-        if local_choice == "decision tree" or int(3):
-            if not self.d_tree:
-                saved_dataset = self.load_instance(self, dt_path)
-                saved_dataset.dt_predict(self.data)
-            else:
-                self.saved_instance.predict(self.data)
-        elif choice_predict == "dataset":
-            self.import_dataset()
+        elif self.prediction_algo.lower == "decision tree" or str(self.prediction_algo) == "3":
+            saved_dataset = self.load_instance(self.dt_path)
+            saved_dataset.dt_predict(self.data)
+        else:
+            self.main()
 
     #        elif choice_predict == "group":
     # Request either a pre defined new list of entries or manual input
