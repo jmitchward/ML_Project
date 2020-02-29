@@ -40,8 +40,8 @@ class naive_bayes:
             print("Predicting {:3.2%}".format(i / (len(self.data))), end="\r")
             # Returns the probability of each classification
             self.class_count()
-            row = self.data.iloc[i]
-            self.core_predict(row)
+            # row = self.data.iloc[i]
+            self.core_predict(self.data.iloc[i])
         if self.classProb[0] > self.classProb[1]:
             self.predictions.append(int(0))
         else:
