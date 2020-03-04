@@ -30,7 +30,8 @@ class predict_manage:
 
         if self.prediction_algo.lower == "log reg" or str(self.prediction_algo) == "1":
             saved_dataset = database_setup.load_instance(self.lr_path)
-            saved_dataset.lr_predict(self.data)
+            for each_predicted in range(len(self.data)):
+                saved_dataset.lr_predict(self.data[each_predicted])
             return saved_dataset.predictions
         elif self.prediction_algo.lower == "naive bayes" or str(self.prediction_algo) == "2":
             saved_dataset = database_setup.load_instance(self.nb_path)

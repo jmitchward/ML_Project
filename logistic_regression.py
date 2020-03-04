@@ -12,23 +12,17 @@ import basic_math
 class logistic_regression:
 
     def __init__(self, train_data, test_data, train_class, test_class):
-        print("Training data retrieved.")
         # self.weight_key = 0.0
-        # Initial weight per formula standard, then weights for each feature of the set
         self.weights = [0.0] * 41
         self.results = 0.0
-        # Dataset to train the algorithm
-        print("Test data retrieved.")
-        # Dataset to score the weights
+        self.predictions = list()
+
         self.test_data = test_data
-        # Train set classifiers, separated for posterity
-        self.train_class = train_class
-        # Test set length will be different as well as classifiers
         self.test_class = test_class
-        # Initial Declaration
         self.data = train_data
+        self.train_class = train_class
+
         self.classifier = train_class
-        # This would be an excellent point to make sure the data is encoded
         self.main()
 
     def weight_calculator(self, learn, iterations):
@@ -81,10 +75,10 @@ class logistic_regression:
             prediction = self.lr_predict(nextRow)
             # Rounds prediction result to 2 decimal places.
             if prediction > 0.5:
-                predictions.append(1)
+                self.predictions.append(1)
             else:
-                predictions.append(0)
+                self.predictions.append(0)
 
-        self.results = basic_math.machine_learning.accuracy(self.test_class, predictions)
+        self.results = basic_math.machine_learning.accuracy(self.test_class, self.predictions)
 
         return self
