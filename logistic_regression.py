@@ -31,10 +31,6 @@ class logistic_regression:
         # This would be an excellent point to make sure the data is encoded
         self.main()
 
-    def save_instance(self):
-        with open('./ml_data/lr_instance', 'wb') as save_file:
-            pickle.dump(self, save_file)
-
     def weight_calculator(self, learn, iterations):
         # Gradient descent is only used to establish weights, which are only established using
         # training data, therefore it will only ever need receive training data.
@@ -45,7 +41,7 @@ class logistic_regression:
                 # Each weight is built from the sum of the columns
                 print("Updating Weights {:3.2%}".format(datapoints / (len(self.data))), end="\r")
                 datapoint = self.data.iloc[datapoints]
-                result = self.predictor(datapoint)
+                result = self.lr_predict(datapoint)
                 error = (result - self.classifier[datapoints])
                 sumError += .5 * (error ** 2)
                 self.weights[0] = self.weights[0] - learn * (1 / (len(self.data))) * error * result
@@ -55,22 +51,23 @@ class logistic_regression:
                     self.weights[i + 1] = self.weights[i + 1] - learn * (1 / (len(self.data))) * error * next_value
         return self.weights
 
-    def predictor(self, data_index):
+    def lr_predict(self, current_row):
         # Store the initial weight
         weight_key = self.weights[0]
-        for feature in range(len(self.data.columns)):
-            # Using the logistic function, calculate the predicted output
-            feature_value = data_index[feature]
-            weight_key += (self.weights[feature] * feature_value)
-            # Multiply the weight by the actual value of each row in the feature
-        if weight_key < 0:
-            return 1.0 - 1 / (1.0 + exp(self.weights[0]))
-        else:
-            return 1.0 / (1.0 + exp(-self.weights[0]))
+        for i in range(len(self.data)):
+            for column_x in range(len(self.data.columns)):
+                # Grab the feature values passed in the single entry given to the function one by one
+                row_value = current_row[column_x]
+                # Multiply the weight by the actual value of each row in the feature
+                weight_key += (self.weights[column_x] * row_value)
+            if weight_key < 0:
+                return 1.0 - 1 / (1.0 + exp(self.weights[0]))
+            else:
+                return 1.0 / (1.0 + exp(-self.weights[0]))
 
     def main(self):
         learningRate = 0.2
-        iterations = 10
+        iterations = 5
         # Returns the list of weights
         print("Calculating weights.")
         self.weights = self.weight_calculator(learningRate, iterations)
@@ -81,7 +78,7 @@ class logistic_regression:
         for row in range(len(self.data)):
             print("Predicting {:3.2%}".format(row / (len(self.data))), end="\r")
             nextRow = self.data.iloc[row]
-            prediction = self.predictor(nextRow)
+            prediction = self.lr_predict(nextRow)
             # Rounds prediction result to 2 decimal places.
             if prediction > 0.5:
                 predictions.append(1)
@@ -90,4 +87,4 @@ class logistic_regression:
 
         self.results = basic_math.machine_learning.accuracy(self.test_class, predictions)
 
-        self.save_instance()
+        return self

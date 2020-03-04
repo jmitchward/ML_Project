@@ -1,6 +1,8 @@
 # Machine Learning-  Dataframe Sort Receives the dataset and then parses it splitting the categorical and numerical
 # features into two separate lists. Called by ML_DFM.
 
+import pickle
+
 
 def df_discovery(data):
     # List for each of the feature types
@@ -56,8 +58,19 @@ def df_discovery(data):
     #    if doubleCheck.lower() == "yes":
     return categorical, numerical, classifier
 
+
 #    else:
 #       If the features have not been properly defined, extend the search parameters
 #        data_search = int(len(data) / 10)
 #        dataset_discovery(data)
 
+def load_instance(file_path):
+    with open(file_path, 'rb') as load_file:
+        saved_dataset = pickle.load(load_file)
+        return saved_dataset
+
+
+def save_instance(the_object, file_path):
+    # Stores the instance for a multiple classification structure
+    with open(file_path, 'wb') as the_file:
+        pickle.dump(the_object, the_file)

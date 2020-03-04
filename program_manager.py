@@ -5,14 +5,12 @@
 # Calls ML_NB, ML_DT, ML_LR
 
 import pandas as pd
-import pickle
 import logistic_regression
 import naive_bayes
 import decision_tree
 import database_manager
 import prediction_manager
-
-print("Welcome. The default dataset is loaded. ")
+import database_setup
 
 
 class menu(database_manager.df_manage):
@@ -29,7 +27,12 @@ class menu(database_manager.df_manage):
         self.feature_values = {}
         # Misc Values
         self.skip_check = "no"
+
         self.ml_instance = './ml_data/ml_instance'
+        self.nb_path = './ml_data/nb_instance'
+        self.lr_path = './ml_data/lr_instance'
+        self.dt_path = './ml_data/dt_instance'
+
         self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
         # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
         self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
@@ -108,40 +111,60 @@ class menu(database_manager.df_manage):
             self.test_data = self.data
             self.test_class = self.classifiers
 
-        self.save_instance()
+        database_setup.save_instance(self, self.ml_instance)
         self.menu()
 
     def run_ml_fn(self):
 
         self.feature_naming()
-        self.save_instance()
+        database_setup.save_instance(self, self.ml_instance)
         self.menu()
 
     def run_ml_lr(self):
-        self.data = self.train_data
-        self.standardize_data()
-        self.data = self.test_data
-        self.standardize_data()
-
+        if self.skip_check == "no":
+            self.data = self.test_data
+            self.standardize_data()
+            self.data = self.train_data
+            self.standardize_data()
         print("Beginning Logistic Regression.")
-        logistic_regression.logistic_regression(self.train_data, self.test_data, self.train_class, self.test_class)
+        lr_instance = logistic_regression.logistic_regression(self.train_data, self.test_data, self.train_class,
+                                                              self.test_class)
+        database_setup.save_instance(lr_instance, self.lr_path)
         self.menu()
 
     def run_ml_dt(self):
+        if self.skip_check == "no":
+            self.data = self.test_data
+            self.standardize_data()
+            self.data = self.train_data
+            self.standardize_data()
         print("Beginning Decision Tree.")
-        decision_tree.decision_tree.main(self.train_data, self.test_data, self.train_class, self.test_class)
+        dt_instance = decision_tree.decision_tree.main(self.train_data, self.test_data, self.train_class,
+                                                       self.test_class)
+        database_setup.save_instance(dt_instance, self.dt_path)
         self.menu()
 
     def run_ml_nb(self):
+        if self.skip_check == "no":
+            self.data = self.test_data
+            self.standardize_data()
+            self.data = self.train_data
+            self.standardize_data()
         print("Beginning Naive Bayes.")
-        naive_bayes.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
+        nb_instance = naive_bayes.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
+        database_setup.save_instance(nb_instance, self.nb_path)
         self.menu()
 
     def run_predictions(self):
         predict_type = input("Individual or group prediction?")
-        print("1. Logistic Regression \n 2. Naive Bayes \n 3. Decision Tree \n")
+        print(" 1. Logistic Regression \n 2. Naive Bayes \n 3. Decision Tree")
         algo = input("Please select an algorithm:")
-        prediction_manager.predict_manage(predict_type, algo, self.feature_names, self.feature_values)
+        results = prediction_manager.predict_manage(predict_type, algo, self.feature_names, self.feature_values)
+        if results == 0:
+            print("Based on the information given, I predict the person makes less than 50,000 dollars a year.")
+        else:
+            print("Based on the information given, I predict the person makes more than 50,000 dollars a year.")
+        self.menu()
 
     def menu(self):
         print("1. Import Data")
@@ -174,23 +197,13 @@ class menu(database_manager.df_manage):
         elif choice.lower() == "run predictions" or str(choice) == "7":
             self.run_predictions()
         elif choice.lower() == "load state" or str(choice) == "8":
-            self.load_state = self.load_instance(self.ml_instance)
+            self.load_state = database_setup.load_instance(self.ml_instance)
             self.load_state.menu()
         elif choice.lower() == "exit" or str(choice) == "9":
             exit()
         else:
             print("Invalid selection.")
             self.menu()
-
-    def save_instance(self):
-        # Stores the instance for a multiple classification structure
-        with open('./ml_data/dataset_instance', 'wb') as save_file:
-            pickle.dump(self, save_file)
-
-    def load_instance(self, file_path):
-        with open(file_path, 'rb') as load_file:
-            saved_dataset = pickle.load(load_file)
-            return saved_dataset
 
 
 if __name__ == '__main__':

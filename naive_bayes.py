@@ -3,12 +3,12 @@
 # Called by ML_main
 
 import basic_math
-import pickle
+import program_manager
 import pandas as pd
 from collections import Counter
 
 
-class naive_bayes:
+class naive_bayes(program_manager.menu):
 
     def __init__(self, train_data, test_data, train_class, test_class):
         print("Training data retrieved.")
@@ -25,27 +25,24 @@ class naive_bayes:
         self.predictions = list()
         self.main()
 
-    def save_instance(self):
-        with open('./ml_data/nb_instance', 'wb') as save_file:
-            pickle.dump(self, save_file)
-
     # Determines which class a given sample belongs to
     def nb_predict(self, data=pd.DataFrame({'A': []})):
         # For predicting outside of instance training. If the default value, which is empty, is false then there was
         # a dataframe passed for predicting.
-        self.predictions.clear()
         if not data.empty:
             self.data = data
+        self.class_count()
         for i in range(len(self.data)):
-            print("Predicting {:3.2%}".format(i / (len(self.data))), end="\r")
-            # Returns the probability of each classification
-            self.class_count()
-            # row = self.data.iloc[i]
-            self.core_predict(self.data.iloc[i])
-        if self.classProb[0] > self.classProb[1]:
-            self.predictions.append(int(0))
-        else:
-            self.predictions.append(int(1))
+            print("{:3.2%}".format(i / (len(self.data))), end="\r")
+            row = self.data.iloc[i]
+            self.core_predict(row)
+            if self.classProb[0] > self.classProb[1]:
+                self.predictions.append(int(0))
+            else:
+                self.predictions.append(int(1))
+            self.classProb[0] = self.initial_count[0]
+            self.classProb[1] = self.initial_count[1]
+        # After prediction is made using the compound percentage, reset the value to initial.
 
     def core_predict(self, row):
         # Probability of a sample belonging to 50000+
@@ -61,12 +58,11 @@ class naive_bayes:
                                                                          self.summaries[eachValue][1])
 
     def class_count(self):
-        local_count = Counter(self.classifier)
+        self.initial_count = Counter(self.classifier)
         # Counts the numbers of 0's and 1's in the classifier list and stores them
-        self.classProb[0] = local_count[0]
-        self.classProb[1] = local_count[1]
 
     def main(self):
+        self.predictions.clear()
         print("Calculating feature summaries.")
         self.summaries = basic_math.machine_learning.basic_calc(self.data)
         print("Beginning predictions.")
@@ -78,4 +74,4 @@ class naive_bayes:
         print('Determining accuracy.')
         self.results = basic_math.machine_learning.accuracy(self.classifier, self.predictions)
 
-        self.save_instance()
+        return self

@@ -30,6 +30,7 @@ class df_manage:
         print('Encoding categorical features.')
         for each in self.features[0]:
             self.encode_data(each)
+        self.standardize_data()
         return self.data
 
     def standardize_data(self):

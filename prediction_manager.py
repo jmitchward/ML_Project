@@ -1,22 +1,21 @@
 import pandas as pd
 import program_manager
+import database_setup
 import textwrap
 
 
-class predict_manage(program_manager.menu):
+class predict_manage:
 
     def __init__(self, prediction, algorithm, feature_names, feature_values):
 
         self.predict_this = []
-
+        self.nb_path = './ml_data/nb_instance'
+        self.lr_path = './ml_data/lr_instance'
+        self.dt_path = './ml_data/dt_instance'
         self.prediction_method = prediction
         self.prediction_algo = algorithm
         self.feature_names = feature_names
         self.feature_values = feature_values
-
-        self.nb_path = './ml_data/nb_instance'
-        self.lr_path = './ml_data/lr_instance'
-        self.dt_path = './ml_data/dt_instance'
 
         self.main()
 
@@ -30,15 +29,17 @@ class predict_manage(program_manager.menu):
         # self.run_ml_fn()
 
         if self.prediction_algo.lower == "log reg" or str(self.prediction_algo) == "1":
-            saved_dataset = self.load_instance(self.lr_path)
-            saved_dataset.lr_predictor(self.data)
+            saved_dataset = database_setup.load_instance(self.lr_path)
+            saved_dataset.lr_predict(self.data)
+            return saved_dataset.predictions
         elif self.prediction_algo.lower == "naive bayes" or str(self.prediction_algo) == "2":
-            saved_dataset = self.load_instance(self.nb_path)
+            saved_dataset = database_setup.load_instance(self.nb_path)
             saved_dataset.nb_predict(self.data)
-            print(saved_dataset.predictions)
+            return saved_dataset.predictions
         elif self.prediction_algo.lower == "decision tree" or str(self.prediction_algo) == "3":
-            saved_dataset = self.load_instance(self.dt_path)
+            saved_dataset = database_setup.load_instance(self.dt_path)
             saved_dataset.dt_predict(self.data)
+            return saved_dataset.predictions
         else:
             self.main()
 
