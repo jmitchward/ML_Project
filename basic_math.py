@@ -24,8 +24,6 @@ class machine_learning:
     @staticmethod
     def basic_calc(data):
         summaries = list()
-
-        # for each in hiImpact:
         for each in range(len(data.columns)):
             mean = data[each].mean()
             sdev = data[each].std()
