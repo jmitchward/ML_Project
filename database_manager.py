@@ -29,8 +29,8 @@ class df_manage:
         # Categorical features = self.features[0]
         # Numerical Features = self.features[1]
 
-        print("\nSearching for illegal characters.")
-        #for value in self.features[0]:
+        # print("\nSearching for illegal characters.")
+        # for value in self.features[0]:
         #    temp_data = self.data[:].astype('category')
         #    self.data[value].replace(' ?', temp_data.describe(include='all')[value][2], inplace=True)
         print('Encoding categorical features.')
@@ -43,15 +43,11 @@ class df_manage:
         # Categorical features = self.features[0]
         # Numerical Features = self.features[1]
         summaries = basic_math.machine_learning.basic_calc(self.data)
-        print('Standardizing numerical features.')
-        for num_columns in self.features[1]:
-            for num_rows in range(len(self.data)):
-                self.data.iat[num_rows, num_columns] = ((self.data.iat[num_rows, num_columns]) - summaries[0]) / summaries[1]
-
-        print('Standardizing categorical features.')
-        for cat_columns in self.features[0]:
-            for num_rows in range(len(self.data)):
-                self.data.iat[num_rows, cat_columns] = ((self.data.iat[num_rows, cat_columns]) - summaries[0]) / summaries[1]
+        print('Standardizing data')
+        for each_column in self.data.columns:
+            for each_row in range(len(self.data)):
+                self.data.iloc[each_row][each_column] = ((self.data.iloc[each_row][each_column]) -
+                                                         summaries[each_column][0]) / summaries[each_column][1]
 
     def feature_naming(self):
         # Replace feature names as this function is only called when names are being written.
