@@ -40,7 +40,7 @@ class df_manage:
     def standardize_data(self):
         print('Standardizing data.')
         for each in (self.features[0] + self.features[1]):
-            self.data.iloc[:, each] = (self.data[each] - self.data[each].mean()) / self.data[each].std()
+            self.data.iloc[:, each] = (self.data.iloc[:, each] - self.data[each].mean()) / self.data[each].std()
 
     def feature_naming(self):
         # Replace feature names as this function is only called when names are being written.

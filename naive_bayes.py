@@ -40,8 +40,8 @@ class naive_bayes(program_manager.menu):
                 self.predictions.append(int(0))
             else:
                 self.predictions.append(int(1))
-            self.classProb[0] = self.initial_count[0]
-            self.classProb[1] = self.initial_count[1]
+        #    self.classProb[0] = self.initial_count[0]
+        #    self.classProb[1] = self.initial_count[1]
         # After prediction is made using the compound percentage, reset the value to initial.
 
     def core_predict(self, row):
@@ -49,13 +49,13 @@ class naive_bayes(program_manager.menu):
         # classProb[0]
         # Probability of a sample belonging to -50000
         # classProb[1]
-        for eachValue in range(len(self.data.columns)):
-            self.classProb[0] *= basic_math.machine_learning.probability(row[eachValue],
-                                                                         self.summaries[eachValue][0],
-                                                                         self.summaries[eachValue][1])
-            self.classProb[1] *= basic_math.machine_learning.probability(row[eachValue],
-                                                                         self.summaries[eachValue][0],
-                                                                         self.summaries[eachValue][1])
+        for this_column in range(len(self.data.columns)):
+            self.classProb[0] *= basic_math.machine_learning.probability(row[this_column],
+                                                                         self.summaries[this_column][0],
+                                                                         self.summaries[this_column][1])
+            self.classProb[1] *= basic_math.machine_learning.probability(row[this_column],
+                                                                         self.summaries[this_column][0],
+                                                                         self.summaries[this_column][1])
 
     def class_count(self):
         self.initial_count = Counter(self.classifier)
