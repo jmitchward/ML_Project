@@ -46,12 +46,12 @@ def df_discovery(data):
             numerical.remove(classifier)
 
     print("Discovered", len(categorical), "categorical features.")
-    for feature in range(len(categorical)):
-        print(categorical[feature], end=" ")
+#    for feature in range(len(categorical)):
+#        print(categorical[feature], end=" ")
 
-    print("\nDiscovered", len(numerical), " numerical features.")
-    for features in range(len(numerical)):
-        print(numerical[features], end=" ")
+    print("\nDiscovered", len(numerical), "numerical features.")
+#    for features in range(len(numerical)):
+#        print(numerical[features], end=" ")
 
     #    doubleCheck = input("Is this correct?")
 

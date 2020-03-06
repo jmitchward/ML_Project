@@ -8,13 +8,11 @@ import basic_math
 
 class df_manage:
 
-    def __init__(self, data):
-        self.data = data
+    def __init__(self):
         self.feature_values = {}
 
     def call_setup(self):
         self.features = database_setup.df_discovery(self.data)
-
     #        self.backup_database()
 
     def encode_data(self, column):
@@ -33,21 +31,16 @@ class df_manage:
         # for value in self.features[0]:
         #    temp_data = self.data[:].astype('category')
         #    self.data[value].replace(' ?', temp_data.describe(include='all')[value][2], inplace=True)
-        print('Encoding categorical features.')
+        print('Encoding categorical features...')
         for each in self.features[0]:
             self.encode_data(each)
         self.standardize_data()
         return self.data
 
     def standardize_data(self):
-        # Categorical features = self.features[0]
-        # Numerical Features = self.features[1]
-        summaries = basic_math.machine_learning.basic_calc(self.data)
-        print('Standardizing data')
-        for each_column in self.data.columns:
-            for each_row in range(len(self.data)):
-                self.data.iloc[each_row][each_column] = ((self.data.iloc[each_row][each_column]) -
-                                                         summaries[each_column][0]) / summaries[each_column][1]
+        print('Standardizing data.')
+        for each in (self.features[0] + self.features[1]):
+            self.data.iloc[:, each] = (self.data[each] - self.data[each].mean()) / self.data[each].std()
 
     def feature_naming(self):
         # Replace feature names as this function is only called when names are being written.
