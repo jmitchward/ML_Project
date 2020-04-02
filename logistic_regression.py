@@ -25,7 +25,7 @@ class logistic_regression:
         self.classifier = train_class
         self.main()
 
-    def weight_calculator(self, learn, iterations):
+    def lr_predict(self, learn, iterations):
         # Gradient descent is only used to establish weights, which are only established using
         # training data, therefore it will only ever need receive training data.
         for eachIter in range(iterations):
@@ -34,8 +34,18 @@ class logistic_regression:
                 # There are 40 weights, one for each individual column
                 # Each weight is built from the sum of the columns
                 print("Updating Weights {:3.2%}".format(datapoints / (len(self.data))), end="\r")
-                datapoint = self.data.iloc[datapoints]
-                result = self.lr_predict(datapoint)
+                current_row = self.data.iloc[datapoints]
+                weight_key = self.weights[0]
+                # Store the initial weight
+                for current_column in range(len(self.data.columns)):
+                    # Grab the feature values passed in the single entry given to the function one by one
+                    row_value = current_row[current_column]
+                    # Multiply the weight by the actual value of each row in the feature
+                    weight_key += (self.weights[current_column] * row_value)
+                if weight_key < 0:
+                    result = (1.0 - 1 / (1.0 + exp(self.weights[0])))
+                else:
+                    result = (1.0 / (1.0 + exp(-self.weights[0])))
                 error = (result - self.classifier[datapoints])
                 sumError += .5 * (error ** 2)
                 self.weights[0] = self.weights[0] - learn * (1 / (len(self.data))) * error * result
@@ -44,20 +54,6 @@ class logistic_regression:
                     next_value = self.data.iloc[datapoints][i]
                     self.weights[i + 1] = self.weights[i + 1] - learn * (1 / (len(self.data))) * error * next_value
         return self.weights
-
-    def lr_predict(self, current_row):
-        # Store the initial weight
-        weight_key = self.weights[0]
-        for i in range(len(self.data)):
-            for column_x in range(len(self.data.columns)):
-                # Grab the feature values passed in the single entry given to the function one by one
-                row_value = current_row[column_x]
-                # Multiply the weight by the actual value of each row in the feature
-                weight_key += (self.weights[column_x] * row_value)
-            if weight_key < 0:
-                return 1.0 - 1 / (1.0 + exp(self.weights[0]))
-            else:
-                return 1.0 / (1.0 + exp(-self.weights[0]))
 
     def main(self):
         learningRate = 0.2

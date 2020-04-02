@@ -5,6 +5,10 @@
 import basic_math
 import program_manager
 import pandas as pd
+import time_stamps
+from math import sqrt
+from math import pi
+from math import exp
 from collections import Counter
 
 
@@ -32,30 +36,30 @@ class naive_bayes(program_manager.menu):
         if not data.empty:
             self.data = data
         self.class_count()
-        for i in range(len(self.data)):
-            print("{:3.2%}".format(i / (len(self.data))), end="\r")
-            row = self.data.iloc[i]
-            self.core_predict(row)
-            if self.classProb[0] > self.classProb[1]:
-                self.predictions.append(int(0))
-            else:
-                self.predictions.append(int(1))
-        #    self.classProb[0] = self.initial_count[0]
-        #    self.classProb[1] = self.initial_count[1]
-        # After prediction is made using the compound percentage, reset the value to initial.
+        self.core_predict()
+        if self.classProb[0] > self.classProb[1]:
+            self.predictions.append(int(0))
+        else:
+            self.predictions.append(int(1))
+    #    self.classProb[0] = self.initial_count[0]
+    #    self.classProb[1] = self.initial_count[1]
+    # After prediction is made using the compound percentage, reset the value to initial.
 
-    def core_predict(self, row):
-        # Probability of a sample belonging to 50000+
-        # classProb[0]
-        # Probability of a sample belonging to -50000
-        # classProb[1]
-        for this_column in range(len(self.data.columns)):
-            self.classProb[0] *= basic_math.machine_learning.probability(row[this_column],
-                                                                         self.summaries[this_column][0],
-                                                                         self.summaries[this_column][1])
-            self.classProb[1] *= basic_math.machine_learning.probability(row[this_column],
-                                                                         self.summaries[this_column][0],
-                                                                         self.summaries[this_column][1])
+    def core_predict(self):
+        for each_row in range(len(self.data)):
+            current_row = self.data.iloc[each_row]
+            print("{:3.2%}".format(each_row / (len(self.data))), end="\r")
+            for each_column in range(len(self.data.columns)):
+                current_row_column = current_row[each_column]
+                step_one = exp(-((current_row_column - self.summaries[each_column][0]) ** 2 / (2 * self.summaries[each_column][1] ** 2)))
+                step_two = (1 / (sqrt(2 * pi) * self.summaries[each_column][1])) * step_one
+            # classProb holds the initial probability already
+            self.classProb[0] *= step_two
+            self.classProb[1] *= step_two
+            # Probability of a sample belonging to 50000+
+            # classProb[0]
+            # Probability of a sample belonging to -50000
+            # classProb[1]
 
     def class_count(self):
         self.initial_count = Counter(self.classifier)

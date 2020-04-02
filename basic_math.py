@@ -12,14 +12,6 @@ class machine_learning:
     catFeatures = []
     questionFeatures = []
 
-
-
-    # Calculates probability
-    @staticmethod
-    def probability(value, mean, sdev):
-        condProb = exp(-((value - mean) ** 2 / (2 * sdev ** 2)))
-        return (1 / (sqrt(2 * pi) * sdev)) * condProb
-
     # Calculates the mean and standard deviation for each column
     @staticmethod
     def basic_calc(data):

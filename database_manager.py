@@ -3,7 +3,7 @@
 # Inherited by ML_main
 
 import database_setup
-import basic_math
+import time
 
 
 class df_manage:
@@ -16,12 +16,13 @@ class df_manage:
     #        self.backup_database()
 
     def encode_data(self, column):
-        # Cast the data frame as category
-        self.data[column] = self.data[column].astype('category')
-        # Change every value in its respective categorical value
-        self.data[column] = self.data[column].cat.codes
-        # Cast the new values as int
-        self.data[column] = self.data[column].astype('int')
+        for each in column:
+            # Cast the data frame as category
+            self.data[column] = self.data[column].astype('category')
+            # Change every value in its respective categorical value
+            self.data[column] = self.data[column].cat.codes
+            # Cast the new values as int
+            self.data[column] = self.data[column].astype('int')
 
     def format_data(self):
         # Categorical features = self.features[0]
@@ -32,8 +33,7 @@ class df_manage:
         #    temp_data = self.data[:].astype('category')
         #    self.data[value].replace(' ?', temp_data.describe(include='all')[value][2], inplace=True)
         print('Encoding categorical features...')
-        for each in self.features[0]:
-            self.encode_data(each)
+        self.encode_data(self.features[0])
         self.standardize_data()
         return self.data
 
@@ -69,3 +69,6 @@ class df_manage:
             current_feature = list(temp_data[catFeatures].cat.categories)
             # Create dictionary of categorical features and their list of values
             self.feature_values.update({catFeatures: current_feature})
+
+
+
