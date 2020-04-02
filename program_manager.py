@@ -44,13 +44,7 @@ class menu(database_manager.df_manage):
     def format_chain(self):
         if self.skip_check == "no":
             self.call_setup()
-        # Encode binary classifier into 0 or 1
-        self.encode_data(self.features[2])
-        # Separate classifier from dataset
-        self.classifiers = self.data.iloc[:][self.features[2]]
-        # Drop classifier from dataset
-        self.data = self.data.drop([self.features[2]], axis=1)
-        # Standardize dataset
+
         self.format_data()
 
     def import_dataset(self):

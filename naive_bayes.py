@@ -63,10 +63,11 @@ class naive_bayes(program_manager.menu):
 
     def class_count(self):
         self.initial_count = Counter(self.classifier)
+        self.classProb[0] = self.initial_count[0]
+        self.classProb[1] = self.initial_count[1]
         # Counts the numbers of 0's and 1's in the classifier list and stores them
 
     def main(self):
-        self.predictions.clear()
         print("Calculating feature summaries.")
         self.summaries = basic_math.machine_learning.basic_calc(self.data)
         print("Beginning predictions.")
