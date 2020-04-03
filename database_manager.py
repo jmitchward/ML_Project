@@ -15,13 +15,21 @@ class df_manage:
     #        self.backup_database()
 
     def encode_data(self, column):
-        for each in column:
+        if type(column) is int:
             # Cast the data frame as category
-            self.data[each] = self.data[each].astype('category')
+            self.data[column] = self.data[column].astype('category')
             # Change every value in its respective categorical value
-            self.data[each] = self.data[each].cat.codes
+            self.data[column] = self.data[column].cat.codes
             # Cast the new values as int
-            self.data[each] = self.data[each].astype('int')
+            self.data[column] = self.data[column].astype('int')
+        else:
+            for each in column:
+                # Cast the data frame as category
+                self.data[each] = self.data[each].astype('category')
+                # Change every value in its respective categorical value
+                self.data[each] = self.data[each].cat.codes
+                # Cast the new values as int
+                self.data[each] = self.data[each].astype('int')
 
     def format_data(self):
         # Categorical features = self.features[0]
@@ -32,9 +40,9 @@ class df_manage:
         #    temp_data = self.data[:].astype('category')
         #    self.data[value].replace(' ?', temp_data.describe(include='all')[value][2], inplace=True)
         print('Encoding categorical features...')
-        self.encode_data(self.features[0] + list(self.features[2]))
+        self.encode_data(self.features[0])
         # Encode binary classifier into 0 or 1
-        # self.encode_data(self.features[2])
+        self.encode_data(self.features[2])
         # Separate classifier from dataset
         self.classifiers = self.data.iloc[:][self.features[2]]
         # Drop classifier from dataset
