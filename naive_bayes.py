@@ -36,10 +36,6 @@ class naive_bayes(program_manager.menu):
         # a dataframe passed for predicting.
         # if not data.empty:
         #            self.data = data
-        print("NB Predict called")
-        print(self.initial_count)
-        print(self.initial_count[0] / len(self.data))
-        self.class_count()
         self.core_predict()
 
     #    self.classProb[0] = self.initial_count[0]
@@ -53,7 +49,7 @@ class naive_bayes(program_manager.menu):
             for each_column in range(len(self.data.columns)):
                 current_row_column = current_row[each_column]
                 step_one = exp(-((current_row_column - self.summaries[each_column][0]) ** 2 / (
-                            2 * self.summaries[each_column][1] ** 2)))
+                        2 * self.summaries[each_column][1] ** 2)))
                 step_two = (1 / (sqrt(2 * pi) * self.summaries[each_column][1])) * step_one
             # classProb holds the initial probability already
             self.classProb[0] *= step_two
@@ -62,10 +58,11 @@ class naive_bayes(program_manager.menu):
                 self.predictions.append(int(0))
             else:
                 self.predictions.append(int(1))
-            # Probability of a sample belonging to 50000+
-            # classProb[0]
-            # Probability of a sample belonging to -50000
-            # classProb[1]
+            # Reset initial probability for each entry
+        # Probability of a sample belonging to 50000+
+        # classProb[0]
+        # Probability of a sample belonging to -50000
+        # classProb[1]
 
     def class_count(self):
         self.classProb[0] = self.initial_count[0] / len(self.data)
@@ -75,12 +72,12 @@ class naive_bayes(program_manager.menu):
     def main(self):
         print("Calculating feature summaries.")
         self.summaries = basic_math.machine_learning.basic_calc(self.data)
+        self.class_count()
         print("Beginning predictions.")
         # All algorithms within the class run on self.data, reassigning avoids parameters
         self.data = self.test_data
         # All algorithms within the class run on self.classifier
         self.classifier = self.test_class
-        self.initial_count = Counter(self.classifier)
         self.nb_predict()
         print('Determining accuracy.')
         self.results = basic_math.machine_learning.accuracy(self.classifier, self.predictions)
