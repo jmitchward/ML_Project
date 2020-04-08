@@ -33,8 +33,10 @@ class menu(database_manager.df_manage):
         self.lr_path = './ml_data/lr_instance'
         self.dt_path = './ml_data/dt_instance'
 
+        #self.train_data = pd.read_csv('divorce.csv', header=None)
         self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
         # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
+        #self.test_data = pd.read_csv('divorce.csv', header=None)
         self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
         # https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz
         self.data = self.train_data

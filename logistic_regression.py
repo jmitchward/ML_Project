@@ -12,8 +12,8 @@ import basic_math
 class logistic_regression:
 
     def __init__(self, train_data, test_data, train_class, test_class):
+        self.weights = [0.0] * (len(train_data.columns) + 1)
         # self.weight_key = 0.0
-        self.weights = [0.0] * 41
         self.results = 0.0
         self.predictions = list()
 
@@ -32,6 +32,7 @@ class logistic_regression:
         for eachIter in range(iterations):
             sumError = 0
             for datapoints in range(len(self.data)):
+                error = 0
                 # There are 40 weights, one for each individual column
                 # Each weight is built from the sum of the columns
                 print("Updating Weights {:3.2%}".format(datapoints / (len(self.data))), end="\r")
@@ -42,24 +43,22 @@ class logistic_regression:
                 for current_column in range(len(self.data.columns)):
                     # Grab the feature values passed in the single entry given to the function one by one
                     row_value = current_row[current_column]
-                    # Multiply the weight by the actual value of each row in the feature
+                    # Get the sum of each value multiplied by the weight of each column in the current row
                     weight_key += (self.weights[current_column] * row_value)
-                if weight_key < 0:
-                    result = (1.0 - 1 / (1.0 + exp(self.weights[0])))
-                else:
-                    result = (1.0 / (1.0 + exp(-self.weights[0])))
-                # WEIGHT CALCULATION
-                error = (result - self.classifier[datapoints])
-                sumError += .5 * (error ** 2)
-                self.weights[0] = self.weights[0] - learn * (1 / (len(self.data))) * error * result
-                # For each feature, use the LR algorithm to train the weight
-                for i in range(len(self.data.columns) - 1):
-                    next_value = self.data.iloc[datapoints][i]
-                    self.weights[i + 1] = self.weights[i + 1] - learn * (1 / (len(self.data))) * error * next_value
+                    # Calculate the second using the second part
+                    if weight_key < 0:
+                        result = (1.0 - 1 / (1.0 + exp(self.weights[0])))
+                    else:
+                        result = (1.0 / (1.0 + exp(-self.weights[0])))
+                    error = (result - self.classifier[datapoints])
+                    sumError += .5 * (error ** 2)
+                    self.weights[0] = self.weights[0] - learn * (1 / (len(self.data))) * sumError * result
+                    self.weights[current_column+1] = self.weights[current_column+1] - learn * (1 / (len(self.data))) * sumError * current_row[current_column]
         return self.weights
 
     def lr_predict(self):
         for entries in range(len(self.data)):
+            self.prediction = 0.0
             print("Updating Weights {:3.2%}".format(entries / (len(self.data))), end="\r")
             current_entry = self.data.iloc[entries]
             weight_key = self.weights[0]
@@ -68,27 +67,24 @@ class logistic_regression:
                 row_value = current_entry[current_feature]
                 # Multiply the weight by the actual value of each row in the feature
                 weight_key += (self.weights[current_feature] * row_value)
-            if weight_key < 0:
-                self.prediction = (1.0 - 1 / (1.0 + exp(self.weights[0])))
-            else:
                 self.prediction = (1.0 / (1.0 + exp(-self.weights[0])))
+            # Rounds prediction result to 2 decimal places.
+            if self.prediction > 0.5:
+                self.predictions.append(1)
+            else:
+                self.predictions.append(0)
 
     def main(self):
         learningRate = 0.2
-        iterations = 5
+        iterations = 3
         # Returns the list of weights
         print("Calculating weights.")
-        self.weights = self.weight_calculator(learningRate, iterations)
+        self.weights = self.lr_train(learningRate, iterations)
         self.predictions = list()
         # Training phrase is complete, redefine working dataset as the test data
         self.data = self.test_data
         self.classifier = self.test_class
         self.lr_predict()
-        # Rounds prediction result to 2 decimal places.
-        if self.prediction > 0.5:
-            self.predictions.append(1)
-        else:
-            self.predictions.append(0)
 
         self.results = basic_math.machine_learning.accuracy(self.test_class, self.predictions)
 
