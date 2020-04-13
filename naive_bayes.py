@@ -5,7 +5,7 @@
 import basic_math
 import program_manager
 import pandas as pd
-import time_stamps
+import numpy
 from math import sqrt
 from math import pi
 from math import exp
@@ -19,13 +19,11 @@ class naive_bayes(program_manager.menu):
         self.data = train_data
         self.results = 0.0
         self.classifier = train_class
-        self.initial_count = Counter(self.classifier)
         print("Testing data retrieved.")
+        self.initial_count = Counter(self.classifier)
         self.test_data = test_data
         self.test_class = test_class
-        self.classProb = [0, 0]
-        self.above_count = 0
-        self.below_count = 0
+        self.classProb = [0.0, 0.0]
         self.summaries = []
         self.predictions = list()
         self.main()
@@ -43,17 +41,21 @@ class naive_bayes(program_manager.menu):
     # After prediction is made using the compound percentage, reset the value to initial.
 
     def core_predict(self):
+        # Model assumes normal distribution
         for each_row in range(len(self.data)):
             current_row = self.data.iloc[each_row]
             print("{:3.2%}".format(each_row / (len(self.data))), end="\r")
             for each_column in range(len(self.data.columns)):
                 current_row_column = current_row[each_column]
-                step_one = exp(-((current_row_column - self.summaries[each_column][0]) ** 2 / (
-                        2 * self.summaries[each_column][1] ** 2)))
-                step_two = (1 / (sqrt(2 * pi) * self.summaries[each_column][1])) * step_one
+                
+                step_one = (current_row_column - self.summaries[each_column][0]) ** 2
+                step_two = 2 * (self.summaries[each_column][1] ** 2)
+                step_three = exp(-(step_one/step_two))
+                step_four = 1 / (sqrt(2 * pi) * self.summaries[each_column][1])
+                step_five = step_four * step_three
             # classProb holds the initial probability already
-            self.classProb[0] *= step_two
-            self.classProb[1] *= step_two
+                self.classProb[0] *= step_five
+                self.classProb[1] *= step_five
             if self.classProb[0] > self.classProb[1]:
                 self.predictions.append(int(0))
             else:

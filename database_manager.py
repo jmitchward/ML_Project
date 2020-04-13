@@ -47,9 +47,19 @@ class df_manage:
         self.classifiers = self.data.iloc[:][self.features[2]]
         # Drop classifier from dataset
         self.data = self.data.drop([self.features[2]], axis=1)
+        # Normalize dataset
+        self.normalize_data()
+        # OR
         # Standardize dataset
-        self.standardize_data()
+        # self.standardize_data()
         return self.data
+
+    def normalize_data(self):
+        # XNEW = (VALUE - VALUE(MIN)) / (VALUE(MAX))-VALUE(MIN))
+        max_array = self.data.max()
+        min_array = self.data.min()
+        for every_column in self.data.columns:
+            self.data.iloc[:, every_column] = (self.data.iloc[:, every_column] - min_array[every_column]) / (max_array[every_column] - min_array[every_column])
 
     def standardize_data(self):
         print('Standardizing data.')
