@@ -76,6 +76,11 @@ class menu(database_manager.df_manage):
         self.menu()
 
     def format_dataset(self):
+        print("Datasets Available:")
+        print("-Train Data")
+        print("-Test Data")
+        print("-Both")
+        print("-Return")
         choice_format = input("Which dataset would you like to format?")
 
         if choice_format.lower() == "train data":
@@ -106,6 +111,13 @@ class menu(database_manager.df_manage):
             self.format_chain()
             self.test_data = self.data
             self.test_class = self.classifiers
+
+        elif choice_format.lower() == "return":
+            self.menu()
+
+        else:
+            print("Invalid selection.")
+            self.format_dataset()
 
         database_setup.save_instance(self, self.ml_instance)
         self.menu()
