@@ -5,22 +5,22 @@ import pickle
 
 
 def df_discovery(data):
-    # List for each of the feature types
-    categorical = []
-    # Number of features in the dataset
-
-    data_type = input("Will this be supervised?")
+    data_type = input("Will this be supervised? Yes/No: ")
     # Ideally a switch for unsupervised which does not feature a classifier
     if data_type.lower() == "yes":
         classifier = input("What column will the classifier be found?")
         classifier = int(classifier)
-
+        df_supervised(data, classifier)
     #    elif data_type.lower() == "unsupervised":
-    #        classifier = 999
-    #    else:
-    #        print("Invalid selection.")
-    #        return
+    #        classifier = None
+    else:
+        print("Invalid selection.")
+        df_discovery(data)
 
+
+def df_supervised(data, classifier):
+    categorical = []
+    # Number of features in the dataset
     data_search = int(len(data) / 25)
     print("Beginning discovery...")
     for every in range(len(data.columns)):
@@ -46,12 +46,12 @@ def df_discovery(data):
             numerical.remove(classifier)
 
     print("Discovered", len(categorical), "categorical features.")
-#    for feature in range(len(categorical)):
-#        print(categorical[feature], end=" ")
+    #    for feature in range(len(categorical)):
+    #        print(categorical[feature], end=" ")
 
     print("\nDiscovered", len(numerical), "numerical features.")
-#    for features in range(len(numerical)):
-#        print(numerical[features], end=" ")
+    #    for features in range(len(numerical)):
+    #        print(numerical[features], end=" ")
 
     #    doubleCheck = input("Is this correct?")
 

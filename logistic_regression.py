@@ -31,6 +31,7 @@ class logistic_regression:
         # WEIGHT CALCULATION
         for eachIter in range(iterations):
             sumError = 0
+            print("Beginning ", eachIter, " of ", iterations, " iterations.")
             for datapoints in range(len(self.data)):
                 error = 0
                 # There are 40 weights, one for each individual column

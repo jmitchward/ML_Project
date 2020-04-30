@@ -43,6 +43,7 @@ class naive_bayes(program_manager.menu):
     def core_predict(self):
         # Model assumes normal distribution
         for each_row in range(len(self.data)):
+            self.class_count()
             current_row = self.data.iloc[each_row]
             self.class_count()
             print("{:3.2%}".format(each_row / (len(self.data))), end="\r")

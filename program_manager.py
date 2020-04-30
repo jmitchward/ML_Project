@@ -28,16 +28,16 @@ class menu(database_manager.df_manage):
         # Misc Values
         self.skip_check = "no"
 
-        self.ml_instance = './ml_data/ml_instance'
-        self.nb_path = './ml_data/nb_instance'
-        self.lr_path = './ml_data/lr_instance'
-        self.dt_path = './ml_data/dt_instance'
+        self.ml_instance = './covid_data/ml_instance'
+        self.nb_path = './covid_data/nb_instance'
+        self.lr_path = './covid_data/lr_instance'
+        self.dt_path = './covid_data/dt_instance'
 
-        #self.train_data = pd.read_csv('divorce.csv', header=None)
-        self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
+        self.train_data = pd.read_pickle('./covid_data/new_dataset.pkl')
+        #self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
         # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
-        #self.test_data = pd.read_csv('divorce.csv', header=None)
-        self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
+        self.test_data = pd.read_pickle('./covid_data/new_dataset.pkl')
+        #self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
         # https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz
         self.data = self.train_data
         # START
@@ -75,6 +75,11 @@ class menu(database_manager.df_manage):
         self.menu()
 
     def format_dataset(self):
+        print("Datasets Available:")
+        print("-Train Data")
+        print("-Test Data")
+        print("-Both")
+        print("-Return")
         choice_format = input("Which dataset would you like to format?")
 
         if choice_format.lower() == "train data":
@@ -105,6 +110,13 @@ class menu(database_manager.df_manage):
             self.format_chain()
             self.test_data = self.data
             self.test_class = self.classifiers
+
+        elif choice_format.lower() == "return":
+            self.menu()
+
+        else:
+            print("Invalid selection.")
+            self.format_dataset()
 
         database_setup.save_instance(self, self.ml_instance)
         self.menu()
