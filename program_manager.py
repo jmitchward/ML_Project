@@ -46,7 +46,6 @@ class menu(database_manager.df_manage):
     def format_chain(self):
         if self.skip_check == "no":
             self.call_setup()
-
         self.format_data()
 
     def import_dataset(self):
