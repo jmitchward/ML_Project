@@ -1,6 +1,5 @@
 import pandas as pd
-import program_manager
-import database_setup
+import create_database
 import textwrap
 
 
@@ -29,16 +28,16 @@ class predict_manage:
         # self.run_ml_fn()
 
         if self.prediction_algo.lower == "log reg" or str(self.prediction_algo) == "1":
-            saved_dataset = database_setup.load_instance(self.lr_path)
+            saved_dataset = create_database.load_instance(self.lr_path)
             for each_predicted in range(len(self.data)):
                 saved_dataset.lr_predict(self.data[each_predicted])
             return saved_dataset.predictions
         elif self.prediction_algo.lower == "naive bayes" or str(self.prediction_algo) == "2":
-            saved_dataset = database_setup.load_instance(self.nb_path)
+            saved_dataset = create_database.load_instance(self.nb_path)
             saved_dataset.nb_predict(self.data)
             return saved_dataset.predictions
         elif self.prediction_algo.lower == "decision tree" or str(self.prediction_algo) == "3":
-            saved_dataset = database_setup.load_instance(self.dt_path)
+            saved_dataset = create_database.load_instance(self.dt_path)
             saved_dataset.dt_predict(self.data)
             return saved_dataset.predictions
         else:
