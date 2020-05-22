@@ -2,17 +2,45 @@
 # A class defining the functions used to manipulate the dataset.
 # Inherited by ML_main
 
-import database_setup
+import create_database
+import pandas as pd
 
 
-class df_manage:
+class df_manage(create_database.df_create):
 
     def __init__(self):
-        self.feature_values = {}
+        # Lists
+        self.train_class = []
+        self.test_class = []
+        self.classifiers = []
 
-    def call_setup(self):
-        self.features = database_setup.df_discovery(self.data)
-    #        self.backup_database()
+        self.feature_names = []
+        self.features = []
+        # Dictionaries
+        self.feature_values = {}
+        # Misc Values
+        # self.train_data = pd.read_csv('./titanic/train.csv')
+        # self.train_data = pd.read_pickle('./covid_data/new_dataset.pkl')
+        self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
+        # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
+        # self.test_data = pd.read_csv('./titanic/test.csv')
+        # self.test_data = pd.read_pickle('./covid_data/new_dataset.pkl')
+        self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
+        # https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz
+        self.data = self.train_data
+        # START
+
+    def setup_dataset(self):
+        create_database.df_discovery(self.data)
+
+    def format_chain(self):
+        if self.skip_check == "no":
+            self.setup_dataset()
+            self.data = self.test_data
+            self.standardize_data()
+            self.data = self.train_data
+            self.standardize_data()
+        self.format_data()
 
     def encode_data(self, column):
         if type(column) is int:
@@ -56,35 +84,32 @@ class df_manage:
 
     def normalize_data(self):
         # XNEW = (VALUE - VALUE(MIN)) / (VALUE(MAX))-VALUE(MIN))
-        max_array = self.data.max()
-        min_array = self.data.min()
+        list_of_maxs = self.data.max()
+        list_of_mins = self.data.min()
         for every_column in self.data.columns:
-            self.data.iloc[:, every_column] = (self.data.iloc[:, every_column] - min_array[every_column]) / (max_array[every_column] - min_array[every_column])
+            self.data.iloc[:, every_column] = (self.data.iloc[:, every_column] - list_of_mins[every_column]) / (
+                        list_of_maxs[every_column] - list_of_mins[every_column])
 
     def standardize_data(self):
         print('Standardizing data.')
         for each in (self.features[0] + self.features[1]):
             self.data.iloc[:, each] = (self.data.iloc[:, each] - self.data[each].mean()) / self.data[each].std()
 
-    def feature_naming(self):
-        # Replace feature names as this function is only called when names are being written.
-        self.feature_names.clear()
-        for each in range(len(self.data.columns)):
-            # feature_values only includes categorical features/columns
-            for categories in self.feature_values:
-                # Cycle each column that has categorical values
-                if each == self.feature_values[categories]:
-                    # If the current column is one of those values
-                    print(self.feature_values[categories])
-                    # Print those values for input clarity
-                    column_name = input("Enter the name for this feature:")
-                    self.feature_names.append(column_name)
-                else:
-                    continue
-            # Otherwise those columns are numerical
-            print(self.data.iloc[:5][each])
-            column_name = input("Enter the name for this feature:")
-            self.feature_names.append(column_name)
+    def prune_data(self):
+        indices = 0
+        while indices < len(self.data.columns):
+            print("Feature:", self.data.columns[indices])
+            print(self.data.iloc[:5][self.data.columns[indices]])
+            check = input("Remove this column? ")
+            if check.lower() == 'yes':
+                print("Removing", self.data.columns[indices])
+                self.data = self.data.drop(self.data.columns[indices], axis=1)
+                self.data.reset_index(drop=True)
+                indices += 1
+            else:
+                indices += 1
+
+        return self.data
 
     def backup_database(self):
         temp_data = self.data[:].astype('category')
@@ -93,6 +118,3 @@ class df_manage:
             current_feature = list(temp_data[catFeatures].cat.categories)
             # Create dictionary of categorical features and their list of values
             self.feature_values.update({catFeatures: current_feature})
-
-
-
