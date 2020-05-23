@@ -6,32 +6,10 @@ import create_database
 import pandas as pd
 
 
-class df_manage(create_database.df_create):
-
-    def __init__(self):
-        # Lists
-        self.train_class = []
-        self.test_class = []
-        self.classifiers = []
-
-        self.feature_names = []
-        self.features = []
-        # Dictionaries
-        self.feature_values = {}
-        # Misc Values
-        # self.train_data = pd.read_csv('./titanic/train.csv')
-        # self.train_data = pd.read_pickle('./covid_data/new_dataset.pkl')
-        self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
-        # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
-        # self.test_data = pd.read_csv('./titanic/test.csv')
-        # self.test_data = pd.read_pickle('./covid_data/new_dataset.pkl')
-        self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
-        # https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz
-        self.data = self.train_data
-        # START
+class db_manage(create_database.create_db):
 
     def setup_dataset(self):
-        create_database.df_discovery(self.data)
+        create_database.learning_method(self.data)
 
     def format_chain(self):
         if self.skip_check == "no":

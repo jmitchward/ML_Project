@@ -2,10 +2,30 @@ import pickle
 import pandas as pd
 
 
-class df_create:
+class create_db:
 
     def __init__(self):
         self.skip_check = "no"
+        # Lists
+        self.train_class = []
+        self.test_class = []
+        self.classifiers = []
+
+        self.feature_names = []
+        self.features = []
+        # Dictionaries
+        self.feature_values = {}
+        # Misc Values
+        # self.train_data = pd.read_csv('./titanic/train.csv')
+        # self.train_data = pd.read_pickle('./covid_data/new_dataset.pkl')
+        self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
+        # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
+        # self.test_data = pd.read_csv('./titanic/test.csv')
+        # self.test_data = pd.read_pickle('./covid_data/new_dataset.pkl')
+        self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
+        # https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz
+        self.data = self.train_data
+        # START
 
     def learning_method(self, data):
         data_type = input("Will this be supervised? Yes/No: ")
@@ -13,7 +33,7 @@ class df_create:
         if data_type.lower() == "yes":
             classifier = input("What column will the classifier be found?")
             classifier = int(classifier)
-            self.supervised_learning(data, classifier)
+            self.features = self.supervised_learning(data, classifier)
         else:
             print("Invalid selection.")
             self.learning_method(data)

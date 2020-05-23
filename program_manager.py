@@ -11,7 +11,7 @@ import prediction_manager
 import create_database
 
 
-class menu(database_manager.df_manage):
+class pg_manage(database_manager.db_manage):
 
     def __init__(self):
 
@@ -153,4 +153,4 @@ class menu(database_manager.df_manage):
 
 
 if __name__ == '__main__':
-    menu()
+    pg_manage()

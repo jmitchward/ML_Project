@@ -12,7 +12,7 @@ from math import exp
 from collections import Counter
 
 
-class naive_bayes(program_manager.menu):
+class naive_bayes(program_manager.pg_manage):
 
     def __init__(self, train_data, test_data, train_class, test_class):
         print("Training data retrieved.")
