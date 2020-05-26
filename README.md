@@ -5,7 +5,9 @@
 - [db_manage](#db_manage)
   - Change a database
 - [pg_manage](#pg_manage)
-  - Use and dervive conclusions from a database
+  - Move around a database
+- [predict_manage]()
+  - Predict new conclusions from a database	
   
 ## Description
 The idea of this program is to automate as much as possible in the process of producing results. This is said with the knowledge that the most important part of machine learning is understanding both the data you are putting in and the results you are producing. Without proper understanding of a dataset the results produced cannot be fully understood. That being said the impetus for this project was an idea for a senior thesis project that highlighted different algorithms used for supervised machine learning. I found a dataset at the UC Irvine Machine Learning Repository and wrote the initial code very rigidly for that dataset. The for loops were written exactly to the length of the dataset and the number of features. Once that project was concluded (with an A) I tossed and turned looking for a project to expand my knowledge base a little and become more familiar with python. 
