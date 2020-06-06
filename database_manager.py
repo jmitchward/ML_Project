@@ -9,7 +9,7 @@ import pandas as pd
 class db_manage(create_database.create_db):
 
     def setup_dataset(self):
-        create_database.learning_method(self.data)
+        self.learning_method(self.data)
 
     def format_chain(self):
         if self.skip_check == "no":

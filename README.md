@@ -10,6 +10,8 @@
   - Predict new conclusions from a database	
   
 ## Description
+This program was written to apply machine learning algorithms to data problems, big or small. There are three alogrithms written within. Naive Bayes is the fastest to results but its predictive quality is based on run time probabilities calculated using Bayes' formula. Logistic regression is the second algorithm featured and is slow to create a backbone, but quick to results. Decision Tree is the last and is still a work in progress in terms of optimization. For a more in depth understanding, see the [Use Case](#use-case).
+
 The idea of this program is to automate as much as possible in the process of producing results. This is said with the knowledge that the most important part of machine learning is understanding both the data you are putting in and the results you are producing. Without proper understanding of a dataset the results produced cannot be fully understood. That being said the impetus for this project was an idea for a senior thesis project that highlighted different algorithms used for supervised machine learning. I found a dataset at the UC Irvine Machine Learning Repository and wrote the initial code very rigidly for that dataset. The for loops were written exactly to the length of the dataset and the number of features. Once that project was concluded (with an A) I tossed and turned looking for a project to expand my knowledge base a little and become more familiar with python. 
    
 Ideally all that needs to be provided is the dataset, which for now is added manually into the code base itself. The program will load the dataset and prompt the user to begin manipulating the dataset and then run that dataset through any of the three algorithms. The algorithms chosen were highlighted for their applications with supervised learning. The dataset used initially was created specifically for supervised learning with a binary classifier. The three written in this repo are: Naive Bayes, Logistic Regression, Decision Tree. Naive Bayes and Logistic Regression algorithms are both fully incorporated and ready for sure. The Decision Tree algorithm is still a work in progress and very slow, so more attention will be needed once I feel comfortable with where the rest of the program is at. The implementation of these algorithm align with the standard implementations found online so an explanation of the process behind these algorithms need not be explained here. 
@@ -18,8 +20,15 @@ The structure of the manager system is a essentially three separate files. The c
 
 ## Use Case
 
-[ ] Under Construction
+Let's present a classification problem. You wish to predict who/what someone will vote for on a national level given a series of attributes of that person. You have four separate databases that are predictive of party affiliation, race, income, and region. This program can be used to construct a new dataset out of these four datasets and then construct a predictive model for our problem.
 
+- Party Affiliation - A supervised, binary classification problem. There exists a dataset consisting of features/columns that can be used to determine whether or not someone is a democrat or republican; while this dataset may consist of many of the same things we use for our problem having different datasets to predict these attributes sperartely will result in a richer model. Ran through Logistic Regression, this would output a 0 (D) or 1(R).
+- Race - A supervised, multivariate classification problem.  There exits a dataset consisting of features/columns that can be used to output someone's racial identifier. 
+- Income - A supervised, multivariate classification problem. There exists a dataset, much like the default originally used to write this program. This would be used to output one of four classifiers: <30k, <75k, <125k, >125k.
+- Region - A supervised, multivaraite classification problem. There exists a dataset that consists of features/columns that can be used to predict where someone lives in the country. This would output one of six regions, like the midwest or northeast.  
+
+Because of the object oriented approach of this program, we can construct an instance for each of these datasets, save those objects and then create a new one constructed of these results. This would allow us then to build a predictive model of our problem given these four attributes of a person. This model would be trained using either an unsupervised approach, not yet implemented, or previous results from similar elections in the past.
+ 
 ## Structure
 
 ### [create_db](create_database.py)

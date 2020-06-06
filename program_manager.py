@@ -66,7 +66,7 @@ class pg_manage(database_manager.db_manage):
             print("Invalid selection.")
             self.manage_dataset()
 
-        create_database.save_instance(self, self.ml_instance)
+        self.save_instance(self, self.ml_instance)
         self.menu()
 
     def run_ml_fn(self):
@@ -79,7 +79,7 @@ class pg_manage(database_manager.db_manage):
         print("Beginning Logistic Regression.")
         lr_instance = logistic_regression.logistic_regression(self.train_data, self.test_data, self.train_class,
                                                               self.test_class)
-        create_database.save_instance(lr_instance, self.lr_path)
+        self.save_instance(lr_instance, self.lr_path)
         self.menu()
 
     def run_ml_dt(self):
@@ -87,14 +87,14 @@ class pg_manage(database_manager.db_manage):
         print("Beginning Decision Tree.")
         dt_instance = decision_tree.decision_tree.main(self.train_data, self.test_data, self.train_class,
                                                        self.test_class)
-        create_database.save_instance(dt_instance, self.dt_path)
+        self.save_instance(dt_instance, self.dt_path)
         self.menu()
 
     def run_ml_nb(self):
         self.format_chain()
         print("Beginning Naive Bayes.")
         nb_instance = naive_bayes.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
-        create_database.save_instance(nb_instance, self.nb_path)
+        self.save_instance(nb_instance, self.nb_path)
         self.menu()
 
     def run_predictions(self):
@@ -143,7 +143,7 @@ class pg_manage(database_manager.db_manage):
         elif choice.lower() == "run predictions" or str(choice) == "8":
             self.run_predictions()
         elif choice.lower() == "load state" or str(choice) == "9":
-            self.load_state = create_database.load_instance(self.ml_instance)
+            self.load_state = self.load_instance(self.ml_instance)
             self.load_state.menu()
         elif choice.lower() == "exit" or str(choice) == "10":
             exit()
