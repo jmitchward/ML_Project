@@ -16,9 +16,9 @@ class pg_manage(database_manager.db_manage):
     def __init__(self):
 
         self.ml_instance = './covid_data/ml_instance'
-        self.nb_path = './covid_data/nb_instance'
-        self.lr_path = './covid_data/lr_instance'
-        self.dt_path = './covid_data/dt_instance'
+        self.nb_path = 'ml_data/covid_data/nb_instance'
+        self.lr_path = 'ml_data/covid_data/lr_instance'
+        self.dt_path = 'ml_data/covid_data/dt_instance'
 
         self.menu()
 
