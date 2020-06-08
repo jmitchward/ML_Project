@@ -8,8 +8,7 @@ import naive_bayes
 import decision_tree
 import database_manager
 import prediction_manager
-import create_database
-
+import error_catch
 
 class pg_manage(database_manager.db_manage):
 
@@ -28,9 +27,9 @@ class pg_manage(database_manager.db_manage):
         print("-Test Data")
         print("-Both")
         print("-Return")
-        to_format = input("Which dataset would you like to format?")
+        to_format = error_catch.menu_input("Which dataset would you like to format?")
 
-        if to_format.lower() == "train data":
+        if to_format == "train data":
             print("Formatting train data")
             self.data = self.train_data
             self.format_chain()
@@ -38,14 +37,14 @@ class pg_manage(database_manager.db_manage):
             self.train_data = self.data
             self.train_class = self.classifiers
 
-        elif to_format.lower() == "test data":
+        elif to_format.lower == "test data":
             print("Formatting test data...")
             self.data = self.test_data
             self.format_chain()
             self.test_data = self.data
             self.test_class = self.classifiers
 
-        elif to_format.lower() == "both":
+        elif to_format == "both":
             print("Formatting training data.")
             self.data = self.train_data
             self.format_chain()
@@ -59,7 +58,7 @@ class pg_manage(database_manager.db_manage):
             self.test_data = self.data
             self.test_class = self.classifiers
 
-        elif to_format.lower() == "return":
+        elif to_format == "return":
             self.menu()
 
         else:
