@@ -5,7 +5,7 @@
 import basic_math
 import program_manager
 import pandas as pd
-import numpy
+import logging
 from math import sqrt
 from math import pi
 from math import exp
@@ -15,6 +15,8 @@ from collections import Counter
 class naive_bayes(program_manager.pg_manage):
 
     def __init__(self, train_data, test_data, train_class, test_class):
+        logging.basicConfig(level=logging.DEBUG, format='\n %(asctime)s - %(levelname)s - %(message)s')
+
         print("Training data retrieved.")
         self.data = train_data
         self.results = 0.0
@@ -30,10 +32,12 @@ class naive_bayes(program_manager.pg_manage):
 
     # Determines which class a given sample belongs to
     def nb_predict(self, data=pd.DataFrame({'A': []})):
+        logging.debug('nb_predict entered')
         # For predicting outside of instance training. If the default value, which is empty, is false then there was
         # a dataframe passed for predicting.
         # if not data.empty:
         #            self.data = data
+        logging.debug('core_predict called')
         self.core_predict()
 
     #    self.classProb[0] = self.initial_count[0]
@@ -42,6 +46,7 @@ class naive_bayes(program_manager.pg_manage):
 
     def core_predict(self):
         # Model assumes normal distribution
+        logging.debug('core_predict entered')
         for each_row in range(len(self.data)):
             self.class_count()
             current_row = self.data.iloc[each_row]
@@ -61,7 +66,6 @@ class naive_bayes(program_manager.pg_manage):
                 self.predictions.append(int(0))
             else:
                 self.predictions.append(int(1))
-            # Reset initial probability for each entry
         # Probability of a sample belonging to 50000+
         # classProb[0]
         # Probability of a sample belonging to -50000

@@ -33,5 +33,5 @@ class machine_learning:
             print("Scoring {:3.2%}".format(i / (len(classifier))), end="\r")
             if classifier[i] == predict[i]:
                 correct += 1
-        print('Accuracy:', round(((correct / len(classifier)) * 100.0)), '%')
+        print('Accuracy:', round(((correct / len(classifier)) * 100.0)),'%')
         return round(((correct / len(classifier)) * 100.0))

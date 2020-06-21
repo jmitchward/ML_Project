@@ -1,41 +1,53 @@
-# Machinen Learning - Dataframe Management
+# Machine Learning - Dataframe Management
 # A class defining the functions used to manipulate the dataset.
 # Inherited by ML_main
 
 import create_database
-import pandas as pd
+import logging
 
 
 class db_manage(create_database.create_db):
 
+    logging.basicConfig(level=logging.DEBUG, format='\n %(asctime)s - %(levelname)s - %(message)s')
+
     def setup_dataset(self):
-        create_database.learning_method(self.data)
+        self.learning_method(self.data)
 
     def format_chain(self):
         if self.skip_check == "no":
+            logging.debug('Skip_check is ' + str(self.skip_check))
             self.setup_dataset()
+            logging.debug('Format chain entered on train_data')
+            self.format_data()
             self.data = self.test_data
-            self.standardize_data()
+            logging.debug('Format chain entered on test_data')
+            self.format_data()
+            # self.standardize_data()
+            logging.debug('Data reset to train_data')
             self.data = self.train_data
-            self.standardize_data()
-        self.format_data()
-
-    def encode_data(self, column):
-        if type(column) is int:
-            # Cast the data frame as category
-            self.data[column] = self.data[column].astype('category')
-            # Change every value in its respective categorical value
-            self.data[column] = self.data[column].cat.codes
-            # Cast the new values as int
-            self.data[column] = self.data[column].astype('int')
+            # self.standardize_data()
         else:
-            for each in column:
+            self.format_data()
+
+    def encode_data(self, features):
+        if type(features) is int:
+            logging.debug('Encoding the classifier ' + str(features))
+            # Cast the data frame as category
+            self.data[features] = self.data[features].astype('category')
+            # Change every value in its respective categorical value
+            self.data[features] = self.data[features].cat.codes
+            # Cast the new values as int
+            self.data[features] = self.data[features].astype('int')
+        else:
+            logging.debug('Encoding categorical features')
+            for each in features:
                 # Cast the data frame as category
                 self.data[each] = self.data[each].astype('category')
                 # Change every value in its respective categorical value
                 self.data[each] = self.data[each].cat.codes
                 # Cast the new values as int
                 self.data[each] = self.data[each].astype('int')
+        logging.debug('Encode_data exited')
 
     def format_data(self):
         # Categorical features = self.features[0]
@@ -46,24 +58,31 @@ class db_manage(create_database.create_db):
         #    temp_data = self.data[:].astype('category')
         #    self.data[value].replace(' ?', temp_data.describe(include='all')[value][2], inplace=True)
         print('Encoding categorical features...')
+        logging.debug('Categorical Features: ' + str(len(self.features[0])))
         self.encode_data(self.features[0])
         # Encode binary classifier into 0 or 1
+        logging.debug('Classifier: ' + str(self.features[2]))
         self.encode_data(self.features[2])
         # Separate classifier from dataset
+        logging.debug('Classifier being stored in self.classifiers')
         self.classifiers = self.data.iloc[:][self.features[2]]
         # Drop classifier from dataset
+        logging.debug('Classifier being dropped from self.data')
         self.data = self.data.drop([self.features[2]], axis=1)
         # Normalize dataset
-        self.normalize_data()
+        # logging.debug('Normalize_data being called from format_data')
+        # self.normalize_data()
         # OR
         # Standardize dataset
         # self.standardize_data()
-        return self.data
 
     def normalize_data(self):
         # XNEW = (VALUE - VALUE(MIN)) / (VALUE(MAX))-VALUE(MIN))
+        logging.debug('Normalize_data entered.')
         list_of_maxs = self.data.max()
+        logging.debug('Maximums ' + str(list_of_maxs))
         list_of_mins = self.data.min()
+        logging.debug('Minimums ' + str(list_of_mins))
         for every_column in self.data.columns:
             self.data.iloc[:, every_column] = (self.data.iloc[:, every_column] - list_of_mins[every_column]) / (
                         list_of_maxs[every_column] - list_of_mins[every_column])

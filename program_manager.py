@@ -9,25 +9,30 @@ import decision_tree
 import database_manager
 import prediction_manager
 import create_database
+import logging
 
 
 class pg_manage(database_manager.db_manage):
 
     def __init__(self):
 
+        logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s)')
+
         self.ml_instance = './covid_data/ml_instance'
         self.nb_path = './covid_data/nb_instance'
         self.lr_path = './covid_data/lr_instance'
         self.dt_path = './covid_data/dt_instance'
+        
+        super(pg_manage, self).__init__()
 
         self.menu()
 
     def manage_dataset(self):
-        print("Datasets Available:")
-        print("-Train Data")
-        print("-Test Data")
-        print("-Both")
-        print("-Return")
+        print('''Datasets Available:
+-Train Data
+-Test Data
+-Both
+-Return ''')
         to_format = input("Which dataset would you like to format?")
 
         if to_format.lower() == "train data":
@@ -66,7 +71,7 @@ class pg_manage(database_manager.db_manage):
             print("Invalid selection.")
             self.manage_dataset()
 
-        create_database.save_instance(self, self.ml_instance)
+        self.save_instance(self, self.ml_instance)
         self.menu()
 
     def run_ml_fn(self):
@@ -75,11 +80,13 @@ class pg_manage(database_manager.db_manage):
         self.menu()
 
     def run_ml_lr(self):
-        self.format_chain()
         print("Beginning Logistic Regression.")
+        self.standardize_data()
+        self.data = self.train_data
+        self.standardize_data()
         lr_instance = logistic_regression.logistic_regression(self.train_data, self.test_data, self.train_class,
                                                               self.test_class)
-        create_database.save_instance(lr_instance, self.lr_path)
+        self.save_instance(lr_instance, self.lr_path)
         self.menu()
 
     def run_ml_dt(self):
@@ -87,14 +94,16 @@ class pg_manage(database_manager.db_manage):
         print("Beginning Decision Tree.")
         dt_instance = decision_tree.decision_tree.main(self.train_data, self.test_data, self.train_class,
                                                        self.test_class)
-        create_database.save_instance(dt_instance, self.dt_path)
+        self.save_instance(dt_instance, self.dt_path)
         self.menu()
 
     def run_ml_nb(self):
-        self.format_chain()
+        self.normalize_data()
+        self.data = self.train_data
+        self.normalize_data()
         print("Beginning Naive Bayes.")
         nb_instance = naive_bayes.naive_bayes(self.train_data, self.test_data, self.train_class, self.test_class)
-        create_database.save_instance(nb_instance, self.nb_path)
+        self.save_instance(nb_instance, self.nb_path)
         self.menu()
 
     def run_predictions(self):
@@ -109,16 +118,16 @@ class pg_manage(database_manager.db_manage):
         self.menu()
 
     def menu(self):
-        print("1. Import Data")
-        print("2. Format Data")
-        print("3. Prune Data")
-        print("4. Name Features")
-        print("5. Run Logistic Regression")
-        print("6. Run Naive Bayes")
-        print("7. Run Decision Tree")
-        print("8. Run Predictions ")
-        print("9. Load Previous State")
-        print("10. Exit")
+        print('''1. Import Data
+2. Format Data
+3. Prune Data
+4. Name Features
+5. Run Logistic Regression
+6. Run Naive Bayes
+7. Run Decision Tree
+8. Run Predictions 
+9. Load Previous State
+10. Exit ''')
 
         next_choice = input("What would you like to do?")
 
@@ -143,7 +152,7 @@ class pg_manage(database_manager.db_manage):
         elif choice.lower() == "run predictions" or str(choice) == "8":
             self.run_predictions()
         elif choice.lower() == "load state" or str(choice) == "9":
-            self.load_state = create_database.load_instance(self.ml_instance)
+            self.load_state = self.load_instance(self.ml_instance)
             self.load_state.menu()
         elif choice.lower() == "exit" or str(choice) == "10":
             exit()

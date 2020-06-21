@@ -1,10 +1,13 @@
 import pickle
+import logging
 import pandas as pd
 
 
 class create_db:
 
     def __init__(self):
+        logging.basicConfig(level=logging.DEBUG, format='\n %(asctime)s - %(levelname)s - %(message)s)')
+
         self.skip_check = "no"
         # Lists
         self.train_class = []
@@ -32,7 +35,15 @@ class create_db:
         # Ideally a switch for unsupervised which does not feature a classifier
         if data_type.lower() == "yes":
             classifier = input("What column will the classifier be found?")
-            classifier = int(classifier)
+            try:
+                classifier = int(classifier)
+            except ValueError:
+                print("Please enter the column number where the classifier can be found.")
+                self.learning_method(data)
+            if classifier > len(self.data.columns):
+                print("Please enter a column number within the number of features: ", len(self.data.columns))
+                self.learning_method(data)
+            logging.debug('Classifier entered: ' + str(classifier))
             self.features = self.supervised_learning(data, classifier)
         else:
             print("Invalid selection.")
@@ -41,14 +52,15 @@ class create_db:
     def supervised_learning(self, data, classifier):
         categorical = []
         # Number of features in the dataset
-        data_search = int(len(self.data))
+        logging.debug("Entering create_db.supervised_learning")
         print("Beginning discovery...")
-        for every in range(len(self.data.columns)):
-            for each in range(self.data_search):
+        for every in range(len(self.data.columns) + 1):
+            for each in data.itertuples():
                 # for each column, use every row up to a 25th of the dataset
-                if type(self.data.iloc[each][every]) == str:
+                if type(each[every]) == str:
                     # If any value within that column is a string, it categorical
-                    categorical.append(every)
+                    logging.debug('Feature ' + str(every) + ' entered due to ' + str(each[every]))
+                    categorical.append(every - 1)
                     # Add it to the list then break to the next column
                     break
                     # If it is a not a string, then it is a number
@@ -65,13 +77,9 @@ class create_db:
             if everyFeature == classifier:
                 numerical.remove(classifier)
 
-        print("Discovered", len(categorical), "categorical features.")
-        #    for feature in range(len(categorical)):
-        #        print(categorical[feature], end=" ")
+        logging.debug("Discovered " + str(len(categorical)) + " categorical features.")
 
-        print("\nDiscovered", len(numerical), "numerical features.")
-        #    for features in range(len(numerical)):
-        #        print(numerical[features], end=" ")
+        logging.debug("Discovered " + str(len(numerical)) + " numerical features.")
 
         #    doubleCheck = input("Is this correct?")
 
