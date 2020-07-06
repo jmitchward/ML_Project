@@ -2,7 +2,6 @@
 
 from math import exp
 import basic_math
-import pandas
 import logging
 
 

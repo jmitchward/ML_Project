@@ -30,7 +30,7 @@ class db_manage(create_database.create_db):
             self.format_data()
 
     def encode_data(self, features):
-        if type(features) is int:
+        if len(features) == 1:
             logging.debug('Encoding the classifier ' + str(features))
             # Cast the data frame as category
             self.data[features] = self.data[features].astype('category')
@@ -42,6 +42,7 @@ class db_manage(create_database.create_db):
             logging.debug('Encoding categorical features')
             for each in features:
                 # Cast the data frame as category
+                logging.debug('Working on Feature ' + str(each))
                 self.data[each] = self.data[each].astype('category')
                 # Change every value in its respective categorical value
                 self.data[each] = self.data[each].cat.codes
@@ -97,7 +98,7 @@ class db_manage(create_database.create_db):
         while indices < len(self.data.columns):
             print("Feature:", self.data.columns[indices])
             print(self.data.iloc[:5][self.data.columns[indices]])
-            check = input("Remove this column? ")
+            check = input("Feature " + str(indices) + ". Remove this column? ")
             if check.lower() == 'yes':
                 print("Removing", self.data.columns[indices])
                 self.data = self.data.drop(self.data.columns[indices], axis=1)

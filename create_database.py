@@ -19,13 +19,13 @@ class create_db:
         # Dictionaries
         self.feature_values = {}
         # Misc Values
-        # self.train_data = pd.read_csv('./titanic/train.csv')
+        self.train_data = pd.read_csv('./ml_data/titanic/train.csv')
         # self.train_data = pd.read_pickle('./covid_data/new_dataset.pkl')
-        self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
+        # self.train_data = pd.read_csv('./ml_data/census_income_real.data', header=None)
         # http://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.test.gz
-        # self.test_data = pd.read_csv('./titanic/test.csv')
+        self.test_data = pd.read_csv('./ml_data/titanic/test.csv')
         # self.test_data = pd.read_pickle('./covid_data/new_dataset.pkl')
-        self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
+        # self.test_data = pd.read_csv('./ml_data/census_income_test.test', header=None)
         # https://archive.ics.uci.edu/ml/machine-learning-databases/census-income-mld/census-income.data.gz
         self.data = self.train_data
         # START
@@ -36,12 +36,9 @@ class create_db:
         if data_type.lower() == "yes":
             classifier = input("What column will the classifier be found?")
             try:
-                classifier = int(classifier)
+                classifier = data.columns[int(classifier)]
             except ValueError:
                 print("Please enter the column number where the classifier can be found.")
-                self.learning_method(data)
-            if classifier > len(self.data.columns):
-                print("Please enter a column number within the number of features: ", len(self.data.columns))
                 self.learning_method(data)
             logging.debug('Classifier entered: ' + str(classifier))
             self.features = self.supervised_learning(data, classifier)
@@ -54,19 +51,26 @@ class create_db:
         # Number of features in the dataset
         logging.debug("Entering create_db.supervised_learning")
         print("Beginning discovery...")
-        for every in range(len(self.data.columns) + 1):
+        for every in range(len(self.data.columns)):
             for each in data.itertuples():
                 # for each column, use every row up to a 25th of the dataset
                 if type(each[every]) == str:
-                    # If any value within that column is a string, it categorical
-                    logging.debug('Feature ' + str(every) + ' entered due to ' + str(each[every]))
-                    categorical.append(every - 1)
-                    # Add it to the list then break to the next column
-                    break
-                    # If it is a not a string, then it is a number
+                    try:
+                        int(each[every])
+                        break
+                    except ValueError:
+                        # If any value within that column is a string, it categorical
+                        logging.debug('Feature ' + str(every) + ' entered due to ' + str(each[every]))
+                        categorical.append(data.columns[every])
+                        # Add it to the list then break to the next column
+                        break
+                        # If it is a not a string, then it is a number
 
         # Make a list of the remaining, non-categorical features
+        logging.debug('Categorical' + str(categorical))
+        logging.debug('Columns ' + str(data.columns))
         numerical = list(set(data.columns) - set(categorical))
+        logging.debug('Numerical' + str(numerical))
 
         # Check if the classifier has been placed in either of the created lists
         # If it has been, remove it

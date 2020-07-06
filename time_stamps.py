@@ -1,17 +1,20 @@
 import time
+import logging
 
 
-class function_timer:
-    def __init__(self):
-        self.start_time = None
+def function_timer(function):
+    logging.basicConfig(level=logging.DEBUG, format='\n %(asctime)s - %(levelname)s - %(message)s')
 
-    def begin_time(self):
-        self.start_time = time.perf_counter()
+    def run_function():
+        start_time = time.time()
 
-    def end_time(self):
-        self.stop_time = time.perf_counter()
+        function()
 
-        elapsed_time = self.stop_time - self.start_time
-        self.start_time = None
+        stop_time = time.time()
 
-        print(elapsed_time)
+        logging.DEBUG(function.__name__ + " : " + stop_time - start_time)
+
+    return run_function()
+
+
+

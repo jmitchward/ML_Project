@@ -2,13 +2,11 @@
 # The control base for the machine learning program. Class constructs a menu and is
 # responsible for the flow of program itself.
 
-import pandas as pd
 import logistic_regression
 import naive_bayes
 import decision_tree
 import database_manager
 import prediction_manager
-import create_database
 import logging
 
 
