@@ -31,7 +31,7 @@ Because of the object oriented approach of this program, we can construct an ins
  
 ## Structure
 
-### [create_db](create_database.py)
+### [create_db](database_setup.py)
 
 This class consists of all functions needed to retrieve and establish the desired database. It is the root/parent of database_manager.
 		
@@ -49,37 +49,37 @@ This class consists of all functions needed to retrieve and establish the desire
  
 **Functions**
  
-- [learning_method](create_database.py#L30)
+- [learning_method](database_setup.py#L30)
   - Function called by database_manager.setup_dataset. 
   - Used to determine which method of learning will be taking place. As of now only supervised learning method is written as those are the only algorithms available. Once a selection is made it then goes forward to call supervised_learning. This function loops if yes is not answered to the initial prompt. 
   - **Variables**:
     - data_type - String -  User prompt to indicate what kind of learning will be taking place. This is temporarily a false choice. 
     - classifier - String -  User prompt to indicate where in the dataset the classifier is stored. This is subsequently type cast as an int and passed on. 
     - features - List - This variable is used in the function call for supervised_learning.
-- [supervised_learning](create_database.py#L41)
+- [supervised_learning](database_setup.py#L41)
     - Function called by learning_method. 
     - Used to determine which features/columns are categorical and which are numerical. This is done using a simple type check, iterating over every value of every feature. If the values are all strings, is is categorical. There is a simpler way to do this in terms of scale, but for now this is the implementation. Additionally the function removes the classifier from which ever list it has been added to. Function returns its variables to the function calling it. 
     - **Variables**
       - categorical - List - Used to store those feature/column values that are determined to be categorical. 
       - numerical - List - Used to store the remaining feature/column values that are not deemed categorical. This is done to reduce the computation time for this function. The majority of features will typically be numerical therefore it is easier to find those that are not then remove them from the initial list.
-- [get_dataset](create_database.py#L81)
+- [get_dataset](database_setup.py#L81)
     - Function called by program_manager.menu_select. Calls program_manager.format_chain and program_manager.menu. 
     - Prompts the user to enter the URL of a new, undefined datasets into the program. If the desired dataset is already split into a training and testing set, they are imported separately and formatted. Currently this presents a false choice as the split automatically choice is not written. Once the desired outcome is reach, the function ends with a call to the menu function of the program_manager to move further along with the process. 
     - **Variables**
       - train_data - Dataframe - The initial definition for the program when this function is called. It is used as the first definition for the ubiquitous data variable used throughout the program, this is done to avoid passing parameters into functions that do not need to be. Data is rigidly defined between train_data and test_data at times appropriate to the progress of the program. Ideally, anyway. 
       - test_data - Dataframe - The initial definition for the program when this function is called. It is used as the first definition for the ubiquitous data variable used throughout the program, this is done to avoid passing parameters into functions that do not need to be. Data is rigidly defined between train_data and test_data at times appropriate to the progress of the program. Ideally, anyway. 
       - data - Dataframe - The initial definition for the program when this function is called. This variable is used as the dataframe throughout the program. This was used to ensure that all the functions do not have to be written twice for each dataset.
-- [name_data](create_database.py#L107)
+- [name_data](database_setup.py#L107)
   - Function called by program_manager.run_ml_fn, which is the function within the menu operation for calling this function.
   - It is responsible for providing user defined column/feature names.
   - **Variables**
       - column_names - String -  Used to store user input providing the aforementioned column/feature name, which is then stored in the class defined feature_names.
-- [load_instance](create_database.py#L127)
+- [load_instance](database_setup.py#L127)
   - Function called program_manager.menu. 
   - Returns the object stored at the file_path parameter given to the function. As the program runs, it will save or prompt the user to save both the dataset structure as well as each of the algorithms ran. Objects loaded are pickles, which is the weirdest sentence I’ve ever written.
   - **Variables**
     - saved_dataset - object - The variable used to store and return the loaded file. 
-- [save_insance](create_database.py#L132)
+- [save_insance](database_setup.py#L132)
   - Function called by program_manager.manage_dataset, program_manager.run_ml_dt, program_manager.run_ml_fn, program_manager.run_ml_lr, program_manager.run_ml_nb. 
   - Stores the given object in the given file path, which is declared in constructorof the program manager.
   - **Variables**
